@@ -1,6 +1,10 @@
 class Player < ApplicationRecord
-  has_many :tournament_players
+  has_many :tournament_players, dependent: :destroy
   has_many :tournaments, through: :tournament_players
+
+  accepts_nested_attributes_for :tournaments, reject_if:  :all_blank, allow_destroy: true
+
+  validates :name, :country, :role, :batting_style, :bowling_style, presence: true
 
   enum role: {
     batsman: 1,

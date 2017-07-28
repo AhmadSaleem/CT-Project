@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170727081637) do
+ActiveRecord::Schema.define(version: 20170728053812) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
@@ -66,7 +69,7 @@ ActiveRecord::Schema.define(version: 20170727081637) do
 
   create_table "tournaments", force: :cascade do |t|
     t.string "title", null: false
-    t.string "format", null: false
+    t.integer "format", null: false
     t.integer "modifications_limit", null: false
     t.integer "coins_required", null: false
     t.integer "budget", null: false

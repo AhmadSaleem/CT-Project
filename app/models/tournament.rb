@@ -7,4 +7,10 @@ class Tournament < ApplicationRecord
   validates :coins_required, :budget, :modifications_limit,
     numericality: { greater_than: 0 }, presence: true
 
+  enum format: {
+    T20: 1,
+    ODI: 2,
+    Test: 3,
+}
+
 end

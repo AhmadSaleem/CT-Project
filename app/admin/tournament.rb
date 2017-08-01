@@ -3,7 +3,8 @@ ActiveAdmin.register Tournament do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
   permit_params :title, :format, :modifications_limit, :coins_required, :budget,
-  tournament_players_attributes: [:id, :player_id, :budget_points, :team_name, :_destroy]
+  predefined_tournament_teams_attributes: [ :id, :predefined_team_id, :_destroy,
+  tournament_players_attributes:[ :id, :player_id, :budget_points, :_destroy ] ]
 
   form do |f|
     f.inputs :title
@@ -12,26 +13,30 @@ ActiveAdmin.register Tournament do
     f.inputs :coins_required
     f.inputs :budget
     f.inputs do
-    f.has_many :tournament_players do |a|
-      a.input :player, as: :select, collection: Player.all
-      a.input :budget_points
-      a.input :team_name
-      a.input :_destroy, as: :boolean, label: :Remove_Player
+    f.has_many :predefined_tournament_teams do |a|
+      a.input :predefined_team, as: :select, collection: PredefinedTeam.pluck(:team_name, :id)
+        a.has_many :tournament_players do |b|
+          b.input :player, as: :select, collection: Player.all
+          b.input :budget_points
+          b.input :_destroy, as: :boolean, label: :Remove_Player
+        end
+      a.input :_destroy, as: :boolean, label: :Remove_Team
+
     end
     end
     f.actions
   end
 
   show do
-    panel "Players of Tournament" do
-      table_for tournament.tournament_players do
-        column  :player
-        column  :budget_points
-        column  :team_name
+    panel "Teams of Tournament" do
+      table_for tournament.predefined_teams do
+        column 'Tournament Teams', :team_name
       end
     end
+
     active_admin_comments
   end
+
   sidebar "Tournamnet Details", only: :show do
     attributes_table_for tournament do
       row :title
@@ -41,4 +46,14 @@ ActiveAdmin.register Tournament do
       row :budget
     end
   end
+
+  sidebar "Tournament Matches ", only: :show do
+    attributes_table_for tournament.matches do
+      row :id
+      row :first_opponent
+      row :second_opponent
+      row :playing_date
+    end
+  end
+
 end

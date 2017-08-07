@@ -4,7 +4,17 @@ class Team < ApplicationRecord
   belongs_to :user
   belongs_to :tournament
 
-  validates :tournament, presence: true
+  delegate :tournament_players, to: :tournament
 
+  validates :tournament, :team_name, presence: true
+  validates_associated :team_players
+  validates :user, uniqueness: { scope: :tournament }
+  validate :unique_players
   accepts_nested_attributes_for :team_players, reject_if: :all_blank, allow_destroy: true
+
+  def unique_players
+     if team_players.pluck(:team_id, :tournament_player_id).uniq!
+       errors.add(:torunament_player_id, ": Can Not add Duplicate Players")
+     end
+  end
 end

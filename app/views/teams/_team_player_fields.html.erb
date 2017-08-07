@@ -1,0 +1,5 @@
+<div>
+  <%= f.label 'Choose  Player' %>
+  <%= f.select :tournament_player_id, options_for_select(@players, f.object.tournament_player_id) %>
+  <br/>
+</div>

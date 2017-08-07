@@ -1,0 +1,23 @@
+<%= form_for @team do |f| %>
+  <% if @team.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@team.errors.count, "error") %> prohibited this user from being saved:</h2>
+      <ul>
+      <% @team.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <h3>Players</h3>
+    <div id='players'>
+      <%= f.fields_for :team_players do |player| %>
+        <%= render 'team_player_fields', f: player %>
+      <% end %>
+  </div>
+  <%= f.submit 'Update Team' %>
+<% end %>
+
+<%= link_to 'Cancel', @team %>

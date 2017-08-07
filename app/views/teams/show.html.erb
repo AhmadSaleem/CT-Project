@@ -1,0 +1,33 @@
+<p>
+  <strong>Team Name:</strong>
+  <%= @team.team_name %>
+  <br/>
+  <table class="table">
+    <h4>Team Players:</h4>
+    <thead>
+      <tr>
+        <th>Player</th>
+        <th>Budget Points</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if @team.team_players.present? %>
+        <% @team.team_players.each do |player| %>
+        <tr class=<%= cycle('even','odd') %>>
+          <td><%= player.player_name%></td>
+          <td><%= player.budget_points%></td>
+        </tr>
+        <% end %>
+      <% else %>
+        <h6>You don't have any players.
+         <%= link_to "click here ",edit_team_path(@team) %> to add Players
+        </h6>
+      <% end %>
+    </tbody>
+  </table>
+</p>
+
+<%= link_to 'Edit Your Team', edit_team_path(@team) %> |
+<%= link_to 'Back To Home', teams_path %>
+
+

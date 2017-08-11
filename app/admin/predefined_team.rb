@@ -1,4 +1,4 @@
-ActiveAdmin.register PredefinedTeam do
+ActiveAdmin.register PredefinedTeam, as: 'Team' do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #

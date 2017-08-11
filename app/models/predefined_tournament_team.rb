@@ -12,4 +12,6 @@ class PredefinedTournamentTeam < ApplicationRecord
 
   validates :predefined_team, uniqueness: { scope: :tournament }
 
+  delegate :team_name, to: :predefined_team
+  delegate :team_id,   to: :predefined_team
 end

@@ -3,6 +3,7 @@ class TournamentPlayer < ApplicationRecord
   has_many :matches, through: :match_player_performances
   has_many :team_players
 
+  has_many :teams, through: :team_players
   belongs_to :predefined_tournament_team
   belongs_to :player
 

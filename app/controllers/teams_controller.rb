@@ -1,6 +1,7 @@
 class TeamsController < ApplicationController
   before_action :set_team, only: [:show, :edit, :update, :destroy]
   before_action :set_players, only: [:edit, :update]
+  before_action :authenticate_user!, except: [:index]
 
   MAX_NO_OF_PLAYERS = 11
 
@@ -17,7 +18,6 @@ class TeamsController < ApplicationController
 
   def create
     @team = current_user.teams.build(team_params)
-    @team.modifications_allowed = @team.tournament.modifications_limit
     if @team.save
       redirect_to @team, notice: "Sccuesfully Created"
     else

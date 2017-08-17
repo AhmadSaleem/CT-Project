@@ -36,6 +36,7 @@ gem 'jbuilder', '~> 2.5'
 gem 'activeadmin'
 gem 'devise'
 gem 'country_select'
+gem 'cocoon'
 
 group :production, :development, :test do
   gem 'pg'

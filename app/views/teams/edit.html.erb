@@ -9,18 +9,23 @@
       </ul>
     </div>
   <% end %>
-  <p>
-    Budget Allowed: <%= @team.tournament_budget %><br>
-    Modifcations Remaining: <%= @team.modifications_remaining %>
-  </p>
-  <div class="field">
-    <h3>Players</h3>
-    <div id='players'>
-      <%= f.fields_for :team_players do |player| %>
-        <%= render 'team_player_fields', f: player %>
-      <% end %>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <p>
+          Budget Allowed: <strong><%= @team.tournament_budget %><br></strong>
+          Modifcations Remaining: <strong><%= @team.modifications_remaining %></strong>
+        </p>
+        <div class="form-group">
+          <h3>Players</h3>
+          <div id='players'>
+            <%= f.fields_for :team_players do |player| %>
+              <%= render 'team_player_fields', f: player %>
+            <% end %>
+        </div>
+        <%= f.submit 'Update Team', class: "btn btn-primary" %>
+        <%= link_to 'Cancel', @team, class: "btn btn-secondary" %>
+      </div>
+    </div>
   </div>
-  <%= f.submit 'Update Team' %>
 <% end %>
-
-<%= link_to 'Cancel', @team %>

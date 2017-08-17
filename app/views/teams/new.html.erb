@@ -12,17 +12,24 @@
       </ul>
     </div>
   <% end %>
-  <p>
-    <%= f.label :tournament_id %>
-    <%= f.collection_select :tournament_id, Tournament.order(:title), :id, :title %>
-  </p>
-  Create your Team:
-  <p>
-    <%= f.label :team_name %>
-    <%= f.text_field :team_name %>
-  </p>
+  <h3> Create Team</h3><hr>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <%= f.label :tournament_id, "Choose Tournament: " %>
+          <%= f.collection_select :tournament_id, Tournament.order(:title), :id, :title, {}, class: "custom-select" %>
+        </div>
 
-  <%= f.submit 'Create Team' %>
-  <%= link_to 'Cancel', teams_path %>
+        <div class=form-group>
+            <%= f.label :team_name %>
+            <%= f.text_field :team_name, class: "form-control" %>
+        </div>
+
+        <%= f.submit "Create Team", class: "btn btn-primary" %>
+        <%= link_to "Cancel", teams_path, class: "btn btn-secondary" %>
+      </div>
+    </div>
+  </div>
 <% end %>
 

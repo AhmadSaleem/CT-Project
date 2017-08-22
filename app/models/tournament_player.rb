@@ -2,8 +2,12 @@ class TournamentPlayer < ApplicationRecord
   has_many :match_player_performances, dependent: :destroy
   has_many :matches, through: :match_player_performances
   has_many :team_players
-
   has_many :teams, through: :team_players
+  has_many :match_team_players, dependent: :destroy
+
+  has_one :captained_team, class_name: "MatchTeam", foreign_key: :captain_id
+
+
   belongs_to :predefined_tournament_team
   belongs_to :player
 

@@ -48,7 +48,7 @@ class TeamsController < ApplicationController
   private
 
     def team_params
-      params.require(:team).permit(:id, :tournament_id, :team_name, team_players_attributes: [:id ,:tournament_player_id])
+      params.require(:team).permit(:id, :tournament_id, :team_name, team_players_attributes: [:id ,:tournament_player_id, :captain])
     end
 
     def set_team

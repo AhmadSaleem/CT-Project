@@ -3,6 +3,8 @@ class TeamPlayer < ApplicationRecord
   belongs_to :team
 
   validates :enrolled_player, uniqueness: { scope: :team }
+
   delegate :player_name, :budget_points, to: :enrolled_player
 
+  scope :captain, -> { where(captain: true) }
 end

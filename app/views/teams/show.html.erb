@@ -13,10 +13,17 @@
     <tbody>
       <% if @team.team_players.present? %>
         <% @team.team_players.each do |player| %>
-        <tr class=<%= cycle('even','odd') %>>
-          <td><%= player.player_name%></td>
-          <td><%= player.budget_points%></td>
-        </tr>
+          <% if player.captain? %>
+            <tr>
+              <td><%= player.player_name %> (c)</td>
+              <td><%= player.budget_points %></td>
+            </tr>
+          <% else %>
+            <tr>
+              <td><%= player.player_name %></td>
+              <td><%= player.budget_points %></td>
+            </tr>
+          <% end %>
         <% end %>
       <% else %>
         <h6>You don't have any players.

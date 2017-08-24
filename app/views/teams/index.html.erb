@@ -1,30 +1,43 @@
-<h1> Welcome to Cricket Fanatasy  </h1>
+<h1> Welcome to Cricket Fantasy  </h1>
 <% if user_signed_in? %>
   <% if current_user.tournaments.count > 0 %>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Tournament</th>
-          <th>Team Name</th>
-          <th>Options</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <% current_user.tournaments.each do |tournament| %>
-          <tr class=<%= cycle('even','odd') %>>
-          <td><%= tournament.title %></td>
-          <% tournament.teams.each do |team| %>
-            <td><%= team.team_name %></td>
-            <td><%= link_to 'Show',team %></td>
-            <td><%= link_to 'Destroy', team, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-          <% end %>
-          </tr>
-        <% end %>
-        <%= link_to 'Enroll In New Tournament', new_team_path %><hr>
-      </tbody>
-
-    </table>
+    <div class="row">
+      <div class="col-md-10">
+        <div class="card">
+          <div class="header">
+            <h4 class="title">Team Details</h4>
+          </div>
+          <div class="content table-responsive table-full-width">
+            <table class="table table-hover table-striped">
+              <thead>
+                <th>Tournament</th>
+                <th>Team Name</th>
+                <th>Options</th>
+              </thead>
+              <tbody>
+                <% current_user.tournaments.each do |tournament| %>
+                  <tr>
+                    <td><%= tournament.title %></td>
+                    <% tournament.teams.each do |team| %>
+                      <td><%= team.team_name %></td>
+                      <td>
+                        <%= link_to 'Show', team %> |
+                        <%= link_to 'Edit', edit_team_path(team) %> |
+                        <%= link_to 'Destroy', team, method: :delete, data: { confirm: 'Are you sure?' } %>
+                      </td>
+                    <% end %>
+                  </tr>
+                <% end %>
+                <p class="content">
+                  <%= link_to 'Enroll In New Tournament', new_team_path %>
+                </p>
+                <hr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   <% else %>
     <p>
       Welcome, <%= link_to 'Enroll In Tournament', new_team_path %>

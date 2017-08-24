@@ -38,7 +38,6 @@ gem 'devise'
 gem 'country_select'
 gem 'cocoon'
 gem 'jquery-rails'
-gem 'bootstrap'
 
 group :production, :development, :test do
   gem 'pg'

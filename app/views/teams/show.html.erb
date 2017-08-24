@@ -1,38 +1,41 @@
 <p>
-  <strong>Team Name:</strong>
-  <%= @team.team_name %>
-  <br/>
-  <table class="table">
-    <h4>Team Players:</h4>
-    <thead>
-      <tr>
-        <th>Player</th>
-        <th>Budget Points</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% if @team.team_players.present? %>
-        <% @team.team_players.each do |player| %>
-          <% if player.captain? %>
-            <tr>
-              <td><%= player.player_name %> (c)</td>
-              <td><%= player.budget_points %></td>
-            </tr>
-          <% else %>
-            <tr>
-              <td><%= player.player_name %></td>
-              <td><%= player.budget_points %></td>
-            </tr>
-          <% end %>
-        <% end %>
-      <% else %>
-        <h6>You don't have any players.
-         <%= link_to "click here ",edit_team_path(@team) %> to add Players
-        </h6>
-      <% end %>
-    </tbody>
-  </table>
+  Team Name: <strong> <%= @team.team_name %> </strong>
 </p>
+<br/>
+<div class="row">
+  <div class="col-md-10">
+    <div class="card">
+      <div class="header">
+        <h4 class="title">Team Players:</h4>
+      </div>
+      <div class="content table-responsive table-full-width">
+        <table class="table table-hover table-striped">
+          <thead>
+            <tr>
+              <th>Player Name</th>
+              <th>Budget Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if @team.team_players.present? %>
+              <% @team.team_players.each do |player| %>
+                 <tr>
+                    <td><%= player.name %></td>
+                    <td><%= player.budget_points %></td>
+                  </tr>
+                
+              <% end %>
+            <% else %>
+              <p class="content">You don't have any players.
+                <%= link_to "click here ",edit_team_path(@team) %> to add Players
+              </p>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 
 <%= link_to 'Edit Your Team', edit_team_path(@team) %> |
 <%= link_to 'Back To Home', teams_path %>

@@ -1,7 +1,13 @@
-<div>
-  <%= f.label 'Choose  Player' %>
-  <%= f.select :tournament_player_id, options_for_select(@players, f.object.tournament_player_id), {}, class: "custom-select" %>
-  <%= f.radio_button :captain, 'captain', checked: f.object.captain, class: "form-check-input", style: "margin-left: 0.5%" %>
-  <%= f.label :captain, "Captain", class: "form-check-label" %>
+<div class="row">
+  <div class="col-md-9">
+    <div class="form-group">
+      <%= f.label 'Choose  Player' %>
+      <%= f.select :tournament_player_id, options_for_select(@players, f.object.tournament_player_id), {}, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="top-margin">
+    <%= f.radio_button :captain, 'captain', checked: f.object.captain, class: "form-check-input" %>
+    <%= f.label :captain, "Captain", class: "form-check-label" %>
+  </div>
 </div>
-<br/>

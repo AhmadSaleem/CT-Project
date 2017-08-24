@@ -15,5 +15,11 @@
 //= require rails-ujs
 //= require turbolinks
 //= require cocoon
-//= require bootstrap-sprockets
+//= require chartist.min
+//= require light-bootstrap-dashboard
+//= require bootstrap-notify
+//= require bootstrap-select
+//= require bootstrap.min
+//= require demo.js
+//= require bootstrap-checkbox-radio-switch
 //= require_tree .

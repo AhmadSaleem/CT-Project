@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170822061015) do
+ActiveRecord::Schema.define(version: 20170825103038) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -132,6 +132,16 @@ ActiveRecord::Schema.define(version: 20170822061015) do
     t.index ["tournament_id"], name: "index_predefined_tournament_teams_on_tournament_id"
   end
 
+  create_table "social_logins", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "email"
+    t.string "provider"
+    t.string "uid"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_social_logins_on_user_id"
+  end
+
   create_table "team_players", force: :cascade do |t|
     t.bigint "team_id"
     t.bigint "tournament_player_id"
@@ -198,6 +208,7 @@ ActiveRecord::Schema.define(version: 20170822061015) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "available_coins", default: 1000, null: false
+    t.string "user_name"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

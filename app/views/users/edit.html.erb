@@ -1,0 +1,42 @@
+<h3> Change Password <h3>
+<%= form_for @user do |f| %>
+  <div class="row">
+    <div class="col-md-7">
+      <div class="card">
+        <div class="content">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                <%= f.label :email %><br />
+                <%= f.email_field :email, class: "form-control", readonly: true %>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                <%= f.label :password, "New Password" %><br />
+                <%= f.password_field :password, autocomplete: "off", class: "form-control" %>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                <%= f.label :password_confirmation %><br />
+                <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control" %>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <%= f.submit "Update password", class: "btn btn-primary" %>
+            <%= link_to "Cancel", teams_path, class: "btn btn-secondary" %>
+          </div>
+          <hr>
+        </div
+      </div>
+    </div>
+  </div>
+<% end %>

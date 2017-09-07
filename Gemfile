@@ -38,6 +38,9 @@ gem 'devise'
 gem 'country_select'
 gem 'cocoon'
 gem 'jquery-rails'
+gem 'omniauth-google-oauth2'
+gem 'omniauth-facebook'
+gem 'omniauth-twitter'
 
 group :production, :development, :test do
   gem 'pg'
@@ -60,6 +63,7 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'figaro'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

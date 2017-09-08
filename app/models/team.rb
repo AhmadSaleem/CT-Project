@@ -17,6 +17,7 @@ class Team < ApplicationRecord
   validate :budget
   validate :coins
   validate :unique_players
+  validate :team_balance
 
   CAPTAIN_MODIFICATION_PENALTY = 2
 
@@ -27,6 +28,17 @@ class Team < ApplicationRecord
   accepts_nested_attributes_for :team_players, reject_if: :all_blank, allow_destroy: true
 
   private
+
+    def team_balance
+      roles = players_role
+      errors.add(:Team," must contain at least 3 bowlers") if roles.count("bowler") < 3
+      errors.add(:Team," must contain at least 3 batsmen") if roles.count("batsman") < 3
+      errors.add(:Team," must contain at least 1 wicket keeper") if roles.count("wk") < 1
+    end
+
+    def player_roles
+      team_players.flat_map(&:enrolled_player).flat_map(&:player).pluck(:role)
+    end
 
     def set_modifications_limit
       self.modifications_remaining = modifications_limit

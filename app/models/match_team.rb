@@ -10,12 +10,16 @@ class MatchTeam < ApplicationRecord
 
   delegate :team_players, to: :team
 
-  before_validation :set_captain, on: :create
+  before_validation :set_captain, :set_remaining_modifications, on: :create
   after_create :add_match_team_players
 
   private
     def set_captain
       self.captain = team_players.captain.take.enrolled_player
+    end
+
+    def set_remaining_modifications
+      self.modifications_remaining = team.modifications_remaining
     end
 
     def add_match_team_players

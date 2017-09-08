@@ -1,5 +1,4 @@
 class Match < ApplicationRecord
-
   has_many :match_predefined_teams, dependent: :destroy
   has_many :predefined_tournament_teams, through: :match_predefined_teams
   has_many :match_teams, dependent: :destroy
@@ -16,6 +15,7 @@ class Match < ApplicationRecord
   validate  :match_date_cannot_be_in_the_past
   validate  :unique_teams
   scope :ordered, -> { order('playing_date ASC') }
+  after_create :add_match_teams
 
   private
     def match_date_cannot_be_in_the_past
@@ -29,4 +29,9 @@ class Match < ApplicationRecord
         errors.add(:predefined_tournamnt_id, "can not add duplicte")
       end
     end
+
+    def add_match_teams
+      tournament.teams.each { |team| self.match_teams.create(team: team) }
+    end
+
 end

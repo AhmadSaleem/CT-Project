@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170825103038) do
+ActiveRecord::Schema.define(version: 20170908074553) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,7 +81,7 @@ ActiveRecord::Schema.define(version: 20170825103038) do
 
   create_table "match_teams", force: :cascade do |t|
     t.integer "modifications_remaining", null: false
-    t.integer "points_earned", null: false
+    t.integer "points_earned", default: 0, null: false
     t.bigint "team_id"
     t.bigint "match_id"
     t.datetime "created_at", null: false
@@ -171,17 +171,6 @@ ActiveRecord::Schema.define(version: 20170825103038) do
     t.bigint "predefined_tournament_team_id"
     t.index ["player_id"], name: "index_tournament_players_on_player_id"
     t.index ["predefined_tournament_team_id"], name: "index_tournament_players_on_predefined_tournament_team_id"
-  end
-
-  create_table "tournament_team_users", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "tournament_id"
-    t.integer "modifications", null: false
-    t.string "team_name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["tournament_id"], name: "index_tournament_team_users_on_tournament_id"
-    t.index ["user_id"], name: "index_tournament_team_users_on_user_id"
   end
 
   create_table "tournaments", force: :cascade do |t|

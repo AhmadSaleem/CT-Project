@@ -30,7 +30,7 @@ class Team < ApplicationRecord
   private
 
     def team_balance
-      roles = players_role
+      roles = player_roles
       errors.add(:Team," must contain at least 3 bowlers") if roles.count("bowler") < 3
       errors.add(:Team," must contain at least 3 batsmen") if roles.count("batsman") < 3
       errors.add(:Team," must contain at least 1 wicket keeper") if roles.count("wk") < 1

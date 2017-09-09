@@ -2,13 +2,14 @@ ActiveAdmin.register Match do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 
-permit_params :tournament_id, :playing_date, match_predefined_teams_attributes: [:id, :predefined_tournament_team_id,
+permit_params :cricbuzz_match_url, :tournament_id, :playing_date, match_predefined_teams_attributes: [:id, :predefined_tournament_team_id,
   match_player_performances_attributes: [:id, :tournament_player_id, :runs, :balls, :sixes, :fours, :wickets, :maiden_overs, :_destroy]]
 
   form  do |f|
     f.object.errors.keys
     f.inputs :tournament
     f.inputs :playing_date
+    f.inputs :cricbuzz_match_url
     f.inputs "Select teams" do
       (2 - f.object.match_predefined_teams.size).times do
         f.object.match_predefined_teams.build

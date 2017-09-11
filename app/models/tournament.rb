@@ -19,4 +19,15 @@ class Tournament < ApplicationRecord
     Test: 3,
   }
 
+  def fetch_team_and_squads
+    begin
+      scraper = TeamSquadScraper.new
+      teams = scraper.get_teams(self.cricbuzz_tournament_url)
+      predefined_tournament_teams = PredefinedTeam.add_teams(teams, self.id)
+      teams.each{ |team| Player.add_players(scraper.get_squads(team), predefined_tournament_teams) }
+      fetched = true , message = "Teams and Players are imported successfully"
+    rescue => e
+      fetched = false, message = e.message
+    end
+  end
 end

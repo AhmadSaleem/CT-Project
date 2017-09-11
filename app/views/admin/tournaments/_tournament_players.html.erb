@@ -1,0 +1,20 @@
+<table class="index_table">
+  <thead>
+    <th>Player Name</th>
+    <th>Budget Points</th>
+    <th>Player Role</th>
+  </thead>
+  <tbody>
+    <% tournament_players.each do |tournament_player| %>
+      <tr>
+        <td><%= tournament_player.player_name %></td>
+        <td><%= tournament_player.budget_points %></td>
+        <td><%= tournament_player.player_role %></td>
+        <td>
+          <%= link_to "View", admin_player_path(tournament_player.player_id) %>|
+          <%= link_to "Edit", edit_admin_player_path(tournament_player.player_id) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

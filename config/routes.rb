@@ -4,9 +4,9 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: "users/callbacks", registrations: "users/registrations" }
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
-  root to: 'teams#index'
+  root to: 'tournaments#index'
 
-
+  resources :tournaments, only: [:index]
   resources :teams
   resources :users, only: [:edit, :update]
 

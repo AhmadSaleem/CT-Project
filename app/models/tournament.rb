@@ -13,6 +13,8 @@ class Tournament < ApplicationRecord
   validates :coins_required, :budget, :modifications_limit,
     numericality: { greater_than: 0 }, presence: true
 
+  scope :published, -> {where(published: true)}
+
   enum format: {
     T20: 1,
     ODI: 2,

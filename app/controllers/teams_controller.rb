@@ -2,6 +2,7 @@ class TeamsController < ApplicationController
   before_action :set_team, only: [:show, :edit, :update, :destroy]
   before_action :set_players, only: [:edit, :update]
   before_action :authenticate_user!, except: [:index]
+  before_action :set_tournament, only: [:new]
 
   MAX_NO_OF_PLAYERS = 11
 
@@ -21,6 +22,7 @@ class TeamsController < ApplicationController
     if @team.save
       redirect_to @team, notice: "Sccuesfully Created"
     else
+      @tournament = Tournament.find_by(id: params[:team][:tournament_id])
       render :new
     end
   end
@@ -57,5 +59,9 @@ class TeamsController < ApplicationController
 
     def set_players
       @players = @team.tournament_players.map {|tp| ["#{tp.player_name}(#{tp.budget_points})",tp.id]}
+    end
+
+    def set_tournament
+      @tournament = Tournament.find_by(id: params[:tournament_id])
     end
 end

@@ -2,22 +2,20 @@
 <% if user_signed_in? %>
   <% if current_user.tournaments.count > 0 %>
     <div class="row">
-      <div class="col-md-10">
-        <div class="card">
-          <div class="header">
-            <h4 class="title">Team Details</h4>
-          </div>
-          <div class="content table-responsive table-full-width">
-            <table class="table table-hover table-striped">
-              <thead>
-                <th>Tournament</th>
-                <th>Team Name</th>
-                <th>Options</th>
-              </thead>
-              <tbody>
-                <% current_user.tournaments.each do |tournament| %>
+      <% current_user.tournaments.each do |tournament| %>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="header">
+              <h4 class="title"><%= tournament.title %></h4>
+            </div>
+            <div class="content table-responsive table-full-width">
+              <table class="table table-hover table-striped">
+                <thead>
+                  <th>Team Name</th>
+                  <th>Options</th>
+                </thead>
+                <tbody>
                   <tr>
-                    <td><%= tournament.title %></td>
                     <% tournament.teams.by_user(current_user).each do |team| %>
                       <td><%= team.team_name %></td>
                       <td>
@@ -27,20 +25,16 @@
                       </td>
                     <% end %>
                   </tr>
-                <% end %>
-                <p class="content">
-                  <%= link_to 'Enroll In New Tournament', new_team_path %>
-                </p>
-                <hr>
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
+      <% end %>
     </div>
   <% else %>
     <p>
-      Welcome, <%= link_to 'Enroll In Tournament', new_team_path %>
+      Welcome, <%= link_to 'Enroll In Tournament', tournaments_path %>
     </p>
   <% end %>
 <% else %>

@@ -18,7 +18,7 @@
                 <% current_user.tournaments.each do |tournament| %>
                   <tr>
                     <td><%= tournament.title %></td>
-                    <% tournament.teams.each do |team| %>
+                    <% tournament.teams.by_user(current_user).each do |team| %>
                       <td><%= team.team_name %></td>
                       <td>
                         <%= link_to 'Show', team %> |

@@ -24,6 +24,8 @@ class Team < ApplicationRecord
   before_update :update_captains
   before_update :update_modifications
 
+  scope :by_user, ->(user) {where(user: user)}
+
   accepts_nested_attributes_for :team_players, reject_if: :all_blank, allow_destroy: true
 
   private

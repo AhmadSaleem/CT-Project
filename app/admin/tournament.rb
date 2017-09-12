@@ -62,12 +62,8 @@ ActiveAdmin.register Tournament do
   end
 
   member_action :fetch_team_and_squads do
-    done, message = resource.fetch_team_and_squads
-    if done
-      flash[:notice] = message
-    else
-      flash[:alert] = "Error: " + message
-    end
+    TeamSquadScraperJob.perform_later(resource.id)
+    flash[:notice] = "Importing teams and players..."
     redirect_to action: :show
   end
 end

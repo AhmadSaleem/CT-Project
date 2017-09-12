@@ -29,4 +29,12 @@ class Tournament < ApplicationRecord
       ExceptionMailer.exception_mail(e.message).deliver_later
     end
   end
+
+  def publish_tournament
+    update(published: true)
+  end
+
+  def unpublish_tournament
+    update(published: false)
+  end
 end

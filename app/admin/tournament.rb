@@ -6,6 +6,19 @@ ActiveAdmin.register Tournament do
     link_to 'Import Players ', fetch_team_and_squads_admin_tournament_path
   end
 
+  action_item :publish_tournament, only: [:show, :edit] do
+    unless resource.published?
+      link_to 'Publish Tournament', publish_tournament_admin_tournament_path
+    end
+  end
+
+  action_item :unpublish_tournament, only: [:show, :edit] do
+    if resource.published?
+      link_to 'Unpublish Tournament', unpublish_tournament_admin_tournament_path
+    end
+  end
+
+
   permit_params :cricbuzz_tournament_url, :title, :format, :modifications_limit, :coins_required, :budget,
   predefined_tournament_teams_attributes: [ :id, :predefined_team_id, :_destroy,
   tournament_players_attributes:[ :id, :player_id, :budget_points, :_destroy ] ]
@@ -65,5 +78,15 @@ ActiveAdmin.register Tournament do
     TeamSquadScraperJob.perform_later(resource.id)
     flash[:notice] = "Importing teams and players..."
     redirect_to action: :show
+  end
+
+  member_action :publish_tournament do
+    resource.publish_tournament
+    redirect_to admin_tournaments_path, notice: "Successfully Published..."
+  end
+
+  member_action :unpublish_tournament do
+    resource.unpublish_tournament
+    redirect_to admin_tournaments_path, notice: "Successfully Unpublished..."
   end
 end

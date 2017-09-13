@@ -15,6 +15,6 @@ class TournamentPlayer < ApplicationRecord
   validates :predefined_tournament_team, :player, presence: true
   validates :player, uniqueness: { scope: :predefined_tournament_team }
 
-  delegate :name, to: :player, prefix: true
+  delegate :name, :role, to: :player, prefix: true
   delegate :tournament, to: :predefined_tournament_team
 end

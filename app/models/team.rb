@@ -24,6 +24,9 @@ class Team < ApplicationRecord
   before_create :set_modifications_limit
   before_update :update_captains
   before_update :update_modifications
+  after_create  :deduct_coins
+
+  scope :by_user, ->(user) {where(user: user)}
 
   accepts_nested_attributes_for :team_players, reject_if: :all_blank, allow_destroy: true
 
@@ -74,5 +77,10 @@ class Team < ApplicationRecord
 
       updated_captain = team_players.map { |tp| tp.enrolled_player if tp.captain? && !(TeamPlayer.find(tp.id).captain?)}.compact
       self.modifications_remaining = modifications_remaining - CAPTAIN_MODIFICATION_PENALTY if last_match_team.captain != updated_captain
+    end
+
+    def deduct_coins
+      coins = user_available_coins - coins_required
+      user.update(available_coins: coins)
     end
 end

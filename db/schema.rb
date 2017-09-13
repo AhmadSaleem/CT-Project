@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170825103038) do
+ActiveRecord::Schema.define(version: 20170911121436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,7 +102,7 @@ ActiveRecord::Schema.define(version: 20170825103038) do
   create_table "players", force: :cascade do |t|
     t.string "name", null: false
     t.integer "role", null: false
-    t.string "country", null: false
+    t.integer "country"
     t.string "batting_style", null: false
     t.string "bowling_style", null: false
     t.datetime "created_at", null: false
@@ -165,7 +165,7 @@ ActiveRecord::Schema.define(version: 20170825103038) do
 
   create_table "tournament_players", force: :cascade do |t|
     t.bigint "player_id"
-    t.integer "budget_points", null: false
+    t.integer "budget_points", default: 7, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "predefined_tournament_team_id"
@@ -192,6 +192,8 @@ ActiveRecord::Schema.define(version: 20170825103038) do
     t.integer "budget", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "cricbuzz_tournament_url"
+    t.boolean "published", default: false
   end
 
   create_table "users", force: :cascade do |t|

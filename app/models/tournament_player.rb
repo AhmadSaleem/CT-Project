@@ -17,4 +17,9 @@ class TournamentPlayer < ApplicationRecord
 
   delegate :name, to: :player, prefix: true
   delegate :tournament, to: :predefined_tournament_team
+
+  def self.player_by_name(name)
+    TournamentPlayer.joins(:player).where(players: {name: name}).first
+  end
+
 end

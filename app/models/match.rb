@@ -17,6 +17,11 @@ class Match < ApplicationRecord
   scope :ordered, -> { order('playing_date ASC') }
   after_create :add_match_teams
 
+  def predefined_team_by_name(name)
+    match_predefined_teams.joins(predefined_tournament_team: :predefined_team)
+                            .where(predefined_teams: {team_name: name}).first
+  end
+
   private
     def match_date_cannot_be_in_the_past
       if playing_date.present? && playing_date < Date.today

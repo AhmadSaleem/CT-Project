@@ -58,4 +58,18 @@ permit_params :cricbuzz_match_url, :tournament_id, :playing_date, match_predefin
     end
     active_admin_comments
   end
+
+  action_item :import_player_performances, only: [:show, :edit] do
+    link_to 'Import Performance', import_player_performances_admin_match_path
+  end
+
+  member_action :import_player_performances do
+    if resource.cricbuzz_match_url.present?
+      PlayerPerformanceScraper.new(resource).create_performance
+      redirect_to admin_match_path, notice: "Performance import successful."
+    else
+      redirect_to edit_admin_match_path, alert: "Please provide cricbuzz_match_url first"
+    end
+  end
+
 end

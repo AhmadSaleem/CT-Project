@@ -102,7 +102,7 @@ class PlayerPerformanceScraper
       {
         overs: recode[1],
         maiden_overs: recode[2],
-        runs: recode[3],
+        runs_conceded: recode[3],
         wickets: recode[4],
         no_balls: recode[5],
         wide_balls: recode[6],

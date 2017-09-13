@@ -52,10 +52,86 @@ permit_params :cricbuzz_match_url, :tournament_id, :playing_date, match_predefin
 
   show do
     panel "Teams of Tournament" do
-      table_for match.predefined_tournament_teams do
-        column 'Teams Name', :team_name
+      columns {"Team Name"}
+      match.match_predefined_teams.each do |team|
+        columns do
+          column { span team.predefined_tournament_team.team_name }
+        end
+        panel "Player Performances" do
+          panel "First Inning" do
+
+            columns  do
+              column { span :name }
+              column { span :runs }
+              column { span :balls }
+              column { span :sixes }
+              column { span :fours }
+              column { span :strike_rate }
+              column { span :overs }
+              column { span :maiden_overs }
+              column { span :runs_conceded }
+              column { span :no_balls }
+              column { span :wide_balls }
+              column { span :economy }
+            end
+
+            team.match_player_performances.first_inning.each do |performance|
+              columns do
+                column { span performance.tournament_player.player_name }
+                column { span performance.runs  || "-" }
+                column { span performance.balls || "-" }
+                column { span performance.sixes || "-" }
+                column { span performance.fours || "-" }
+                column { span performance.strike_rate || "-" }
+                column { span performance.overs || "-" }
+                column { span performance.maiden_overs || "-" }
+                column { span performance.runs_conceded || "-" }
+                column { span performance.no_balls || "-" }
+                column { span performance.wide_balls || "-" }
+                column { span performance.economy || "-" }
+              end
+            end
+          end
+
+          panel "Second Inning" do
+
+            columns  do
+              column { span :name }
+              column { span :runs }
+              column { span :balls }
+              column { span :sixes }
+              column { span :fours }
+              column { span :strike_rate }
+              column { span :overs }
+              column { span :maiden_overs }
+              column { span :runs_conceded }
+              column { span :no_balls }
+              column { span :wide_balls }
+              column { span :economy }
+            end
+
+            team.match_player_performances.second_inning.each do |performance|
+              columns do
+                column { span performance.tournament_player.player_name }
+                column { span performance.runs  || "-" }
+                column { span performance.balls || "-" }
+                column { span performance.sixes || "-" }
+                column { span performance.fours || "-" }
+                column { span performance.strike_rate || "-" }
+                column { span performance.overs || "-" }
+                column { span performance.maiden_overs || "-" }
+                column { span performance.runs_conceded || "-" }
+                column { span performance.no_balls || "-" }
+                column { span performance.wide_balls || "-" }
+                column { span performance.economy || "-" }
+              end
+            end
+          end if team.match_player_performances.second_inning.present?
+
+        end
       end
     end
+
     active_admin_comments
   end
 

@@ -1,0 +1,44 @@
+<h1> Welcome to Cricket Fantasy  </h1>
+<% if user_signed_in? %>
+  <% if @tournaments.count > 0 %>
+    <div class="row">
+      <div class="col-md-10">
+        <div class="card">
+          <div class="header">
+            <h4 class="title">Tournaments</h4>
+          </div>
+
+          <div class="content table-responsive table-full-width">
+            <table class="table table-hover table-striped">
+              <thead>
+                <th>Tournament Title</th>
+                <th>Format</th>
+                <th>Modifications Allowed</th>
+                <th>Coins Required</th>
+                <th>Budget</th>
+              </thead>
+              <tbody>
+                <% @tournaments.each do |tournament| %>
+                  <tr>
+                    <td><%= tournament.title %></td>
+                    <td><%= tournament.format %></td>
+                    <td><%= tournament.modifications_limit %></td>
+                    <td><%= tournament.coins_required %></td>
+                    <td><%= tournament.budget %></td>
+                    <td><%= link_to 'Enroll', { controller: :teams, action: :new, tournament_id: tournament.id } %></td>
+                  </tr>
+                <% end %>
+                <hr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+   <p> There are not any publish tournaments yet </p>
+  <% end %>
+<% else %>
+  Please login to view tournaments and teams:
+  <%= link_to ' Login ', new_user_session_path %>
+<% end %>

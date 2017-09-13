@@ -47,16 +47,24 @@ ActiveRecord::Schema.define(version: 20170909074705) do
   end
 
   create_table "match_player_performances", force: :cascade do |t|
-    t.integer "runs", null: false
-    t.integer "balls", null: false
-    t.integer "fours", null: false
-    t.integer "sixes", null: false
+    t.integer "runs"
+    t.integer "balls"
+    t.integer "fours"
+    t.integer "sixes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "tournament_player_id"
     t.bigint "match_predefined_team_id"
     t.integer "wickets"
     t.integer "maiden_overs"
+    t.float "strike_rate"
+    t.string "wicket_detail"
+    t.float "overs"
+    t.float "economy"
+    t.integer "runs_conceded"
+    t.integer "no_balls"
+    t.integer "wide_balls"
+    t.integer "inning"
     t.index ["match_predefined_team_id"], name: "index_match_player_performances_on_match_predefined_team_id"
     t.index ["tournament_player_id"], name: "index_match_player_performances_on_tournament_player_id"
   end

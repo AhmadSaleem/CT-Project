@@ -65,8 +65,8 @@ permit_params :cricbuzz_match_url, :tournament_id, :playing_date, match_predefin
 
   member_action :import_player_performances do
     if resource.cricbuzz_match_url.present?
-      PlayerPerformanceScraper.new(resource).create_performance
-      redirect_to admin_match_path, notice: "Performance import successful."
+      PlayerPerformanceScraperJob.perform_later(resource.id)
+      redirect_to admin_match_path, notice: "Importing Performance..."
     else
       redirect_to edit_admin_match_path, alert: "Please provide cricbuzz_match_url first"
     end

@@ -17,11 +17,19 @@ class PlayerPerformanceScraper
   end
 
   def create_performance
-    doc = Nokogiri::HTML(open(match_url))
-    inning_team_name(doc)
-    doc.xpath(XPATH_OF_INNING).each_with_index do |inning, inning_no|
-      create_batting_performance(inning, inning_no, batting_teams[inning_no])
-      create_bowling_performance(inning, inning_no, bowling_team(inning_no))
+    begin
+      doc = Nokogiri::HTML(open(match_url))
+      inning_team_name(doc)
+      doc.xpath(XPATH_OF_INNING).each_with_index do |inning, inning_no|
+        begin
+          create_batting_performance(inning, inning_no, batting_teams[inning_no])
+          create_bowling_performance(inning, inning_no, bowling_team(inning_no))
+        rescue => e
+          ExceptionMailer.exception_mail(e.message).deliver_later
+        end
+      end
+    rescue => e
+      ExceptionMailer.exception_mail(e.message).deliver_later
     end
   end
 
@@ -42,23 +50,29 @@ class PlayerPerformanceScraper
 
     def create_batting_performance(inning, inning_no, team_name)
       inning.xpath(XPATH_OF_BATTING).each do |row|
-        recode = row.css('div').map(&:text)
-        break if recode.include?("Extras")
-
-        player_match_inning = set_player_match_inning(recode, inning_no, team_name)
-        batting_performance = set_batting_performance_of_seven_index(recode) if recode.length == 7
-        batting_performance = set_batting_performance_of_eleven_index(recode) if recode.length == 11
-        save_performance(player_match_inning, batting_performance)
+        begin
+          recode = row.css('div').map(&:text)
+          break if recode.include?("Extras")
+          player_match_inning = set_player_match_inning(recode, inning_no, team_name)
+          batting_performance = set_batting_performance_of_seven_index(recode) if recode.length == 7
+          batting_performance = set_batting_performance_of_eleven_index(recode) if recode.length == 11
+          save_performance(player_match_inning, batting_performance)
+        rescue => e
+          ExceptionMailer.exception_mail(e.message).deliver_later
+        end
       end
     end
 
     def create_bowling_performance(inning, inning_no, team_name)
       inning.xpath(XPATH_OF_BOWLING).each do |row|
-        recode = row.css('div').map(&:text)
-
-        player_match_inning = set_player_match_inning(recode, inning_no, team_name)
-        bowling_performance = set_bowling_performance(recode)
-        save_performance(player_match_inning, bowling_performance)
+        begin
+          recode = row.css('div').map(&:text)
+          player_match_inning = set_player_match_inning(recode, inning_no, team_name)
+          bowling_performance = set_bowling_performance(recode)
+          save_performance(player_match_inning, bowling_performance)
+        rescue => e
+          ExceptionMailer.exception_mail(e.message).deliver_later
+        end
       end
     end
 

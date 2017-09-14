@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170911121436) do
+ActiveRecord::Schema.define(version: 20170914064005) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -105,6 +105,7 @@ ActiveRecord::Schema.define(version: 20170911121436) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "cricbuzz_match_url"
+    t.boolean "approved", default: false
     t.index ["tournament_id"], name: "index_matches_on_tournament_id"
   end
 

@@ -23,6 +23,14 @@ class Match < ApplicationRecord
                             .where(predefined_teams: {team_name: name}).first
   end
 
+  def approve_match
+    update(approved: true)
+  end
+
+  def disapprove_match
+    update(approved: false)
+  end
+
   private
     def match_date_cannot_be_in_the_past
       if playing_date.present? && playing_date < Date.today

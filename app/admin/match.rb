@@ -155,12 +155,36 @@ permit_params :cricbuzz_match_url, :tournament_id, :playing_date,
     link_to 'Import Performance', import_player_performances_admin_match_path
   end
 
+  action_item :approve_match, only: [:show, :edit] do
+    link_to 'Approve Match', approve_match_admin_match_path unless resource.approved?
+  end
+
+  action_item :disapprove_match, only: [:show, :edit] do
+    link_to 'Disapprove Match', disapprove_match_admin_match_path if resource.approved?
+  end
+
   member_action :import_player_performances do
     if resource.cricbuzz_match_url.present?
       PlayerPerformanceScraperJob.perform_later(resource.id)
       redirect_to admin_match_path, notice: "Importing Performance..."
     else
       redirect_to edit_admin_match_path, alert: "Please provide cricbuzz_match_url first"
+    end
+  end
+
+  member_action :approve_match do
+    if resource.approve_match
+      redirect_to admin_match_path, notice: "Successfully Approved."
+    else
+      redirect_to admin_match_path, alert: resource.errors
+    end
+  end
+
+  member_action :disapprove_match do
+    if resource.disapprove_match
+      redirect_to admin_match_path, notice: "Successfully disapproved."
+    else
+      redirect_to admin_match_path, notice: resource.errors
     end
   end
 

@@ -84,6 +84,7 @@ permit_params :cricbuzz_match_url, :tournament_id, :playing_date,
               column { span :fours }
               column { span :strike_rate }
               column { span :overs }
+              column { span :wickets }
               column { span :maiden_overs }
               column { span :runs_conceded }
               column { span :no_balls }
@@ -100,6 +101,7 @@ permit_params :cricbuzz_match_url, :tournament_id, :playing_date,
                 column { span performance.fours || "-" }
                 column { span performance.strike_rate || "-" }
                 column { span performance.overs || "-" }
+                column { span performance.wickets || "-" }
                 column { span performance.maiden_overs || "-" }
                 column { span performance.runs_conceded || "-" }
                 column { span performance.no_balls || "-" }
@@ -119,6 +121,7 @@ permit_params :cricbuzz_match_url, :tournament_id, :playing_date,
               column { span :fours }
               column { span :strike_rate }
               column { span :overs }
+              column { span :wickets }
               column { span :maiden_overs }
               column { span :runs_conceded }
               column { span :no_balls }
@@ -135,6 +138,7 @@ permit_params :cricbuzz_match_url, :tournament_id, :playing_date,
                 column { span performance.fours || "-" }
                 column { span performance.strike_rate || "-" }
                 column { span performance.overs || "-" }
+                column { span performance.wickets || "-" }
                 column { span performance.maiden_overs || "-" }
                 column { span performance.runs_conceded || "-" }
                 column { span performance.no_balls || "-" }

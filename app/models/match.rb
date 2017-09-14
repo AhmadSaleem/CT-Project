@@ -12,9 +12,10 @@ class Match < ApplicationRecord
 
   validates :playing_date, presence: true
   validates :match_predefined_teams, presence: true
-  validate  :match_date_cannot_be_in_the_past
+  validate  :match_date_cannot_be_in_the_past, on: :create
   validate  :unique_teams
   scope :ordered, -> { order('playing_date ASC') }
+
   after_create :add_match_teams
 
   def predefined_team_by_name(name)

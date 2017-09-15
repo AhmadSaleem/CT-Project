@@ -90,6 +90,9 @@ permit_params :cricbuzz_match_url, :tournament_id, :playing_date,
               column { span :no_balls }
               column { span :wide_balls }
               column { span :economy }
+              column { span :catches }
+              column { span :run_outs }
+              column { span :stumpings }
             end
 
             team.match_player_performances.first_inning.each do |performance|
@@ -107,6 +110,9 @@ permit_params :cricbuzz_match_url, :tournament_id, :playing_date,
                 column { span performance.no_balls || "-" }
                 column { span performance.wide_balls || "-" }
                 column { span performance.economy || "-" }
+                column { span performance.catches || "-" }
+                column { span performance.run_outs || "-" }
+                column { span performance.stumpings || "-" }
               end
             end
           end
@@ -127,6 +133,9 @@ permit_params :cricbuzz_match_url, :tournament_id, :playing_date,
               column { span :no_balls }
               column { span :wide_balls }
               column { span :economy }
+              column { span :catches }
+              column { span :run_outs }
+              column { span :stumpings }
             end
 
             team.match_player_performances.second_inning.each do |performance|
@@ -144,6 +153,9 @@ permit_params :cricbuzz_match_url, :tournament_id, :playing_date,
                 column { span performance.no_balls || "-" }
                 column { span performance.wide_balls || "-" }
                 column { span performance.economy || "-" }
+                column { span performance.catches || "-" }
+                column { span performance.run_outs || "-" }
+                column { span performance.stumpings || "-" }
               end
             end
           end if team.match_player_performances.second_inning.present?

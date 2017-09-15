@@ -19,7 +19,10 @@ class TournamentPlayer < ApplicationRecord
   delegate :tournament, to: :predefined_tournament_team
 
   def self.player_by_name(name)
-    TournamentPlayer.joins(:player).where(players: {name: name}).first
+    TournamentPlayer.joins(:player).where(players: {name: name}).take
   end
 
+  def self.player_by_second_name(name)
+    TournamentPlayer.joins(:player).where("players.name like?","%#{name}%").take
+  end
 end

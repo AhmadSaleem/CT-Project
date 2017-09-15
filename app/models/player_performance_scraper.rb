@@ -51,11 +51,13 @@ class PlayerPerformanceScraper
     def create_batting_performance(inning, inning_no, team_name)
       inning.xpath(XPATH_OF_BATTING).each do |row|
         begin
-          recode = row.css('div').map(&:text)
-          break if recode.include?("Extras")
-          player_match_inning = set_player_match_inning(recode, inning_no, team_name)
-          batting_performance = set_batting_performance_of_seven_index(recode) if recode.length == 7
-          batting_performance = set_batting_performance_of_eleven_index(recode) if recode.length == 11
+          record = row.css('div').map(&:text)
+          break if record.include?("Extras")
+
+          create_fielding_performance(record[1], inning_no, bowling_team(inning_no))
+          record.map! { |col| col.gsub(/\W/, ' ').strip if col.gsub(/\W/, ' ').strip.present? }.compact!
+          player_match_inning = set_player_match_inning(record, inning_no, team_name)
+          batting_performance = set_batting_performance(record)
           save_performance(player_match_inning, batting_performance)
         rescue => e
           ExceptionMailer.exception_mail(e.message).deliver_later
@@ -66,9 +68,9 @@ class PlayerPerformanceScraper
     def create_bowling_performance(inning, inning_no, team_name)
       inning.xpath(XPATH_OF_BOWLING).each do |row|
         begin
-          recode = row.css('div').map(&:text)
-          player_match_inning = set_player_match_inning(recode, inning_no, team_name)
-          bowling_performance = set_bowling_performance(recode)
+          record = row.css('div').map(&:text)
+          player_match_inning = set_player_match_inning(record, inning_no, team_name)
+          bowling_performance = set_bowling_performance(record)
           save_performance(player_match_inning, bowling_performance)
         rescue => e
           ExceptionMailer.exception_mail(e.message).deliver_later
@@ -76,51 +78,70 @@ class PlayerPerformanceScraper
       end
     end
 
-    def set_batting_performance_of_seven_index(recode)
+    def create_fielding_performance(wicket_detail, inning_no, team_name)
+      begin
+        catcher_with_cb = wicket_detail.scan(/c [A-z]+\s*[A-z]* b/).first
+        if catcher_with_cb.present?
+          player_name = catcher_with_cb.gsub(/c|b/,'').strip
+          player_match_inning = set_player_match_inning(player_name, inning_no, team_name)
+          save_performance(player_match_inning, {catches: 1}, true)
+        elsif wicket_detail.include?("run out")
+          wicket_detail.scan(/\([^()]*\)/).first.gsub(/[()]/, "").split('/').each do |player_name|
+            player_match_inning = set_player_match_inning(player_name, inning_no, team_name)
+            save_performance(player_match_inning, {run_outs: 1}, true)
+          end
+        elsif wicket_detail.scan(/st [A-z]+\s*[A-z]* b/).first.present?
+          player_name = wicket_detail.scan(/st [A-z]+\s*[A-z]* b/).first.gsub(/st|b/,'').strip
+          player_match_inning = set_player_match_inning(player_name, inning_no, team_name)
+          save_performance(player_match_inning, {stumpings: 1}, true)
+        end
+      rescue => e
+        ExceptionMailer.exception_mail(e.message).deliver_later
+      end
+    end
+
+    def set_batting_performance(record)
       {
-        wicket_detail: recode[1].strip,
-        runs: recode[2].to_i,
-        balls: recode[3].to_i,
-        fours: recode[4].to_i,
-        sixes: recode[5].to_i,
-        strike_rate: recode[6].to_f
+        wicket_detail: record[1],
+        runs: record[2].to_i,
+        balls: record[3].to_i,
+        fours: record[4].to_i,
+        sixes: record[5].to_i,
+        strike_rate: record[6].to_f
       }
     end
 
-    def set_batting_performance_of_eleven_index(recode)
+    def set_bowling_performance(record)
       {
-        wicket_detail: recode[1].gsub(/\W/, ' ').strip,
-        runs: recode[6].to_i,
-        balls: recode[7].to_i,
-        fours: recode[8].to_i,
-        sixes: recode[9].to_i,
-        strike_rate: recode[10].to_f
+        overs: record[1],
+        maiden_overs: record[2],
+        runs_conceded: record[3],
+        wickets: record[4],
+        no_balls: record[5],
+        wide_balls: record[6],
+        economy: record[7]
       }
     end
 
-    def set_bowling_performance(recode)
+    def set_player_match_inning(name, inning_no, team_name)
+      tournament_player = TournamentPlayer.player_by_name(name[0].gsub(/\([^()]*\)/,'').strip) if name.is_a? Array
+      tournament_player = TournamentPlayer.player_by_second_name(name) if name.is_a? String
       {
-        overs: recode[1],
-        maiden_overs: recode[2],
-        runs_conceded: recode[3],
-        wickets: recode[4],
-        no_balls: recode[5],
-        wide_balls: recode[6],
-        economy: recode[7]
-      }
-    end
-
-    def set_player_match_inning(recode, inning_no, team_name)
-      {
-        tournament_player: TournamentPlayer.player_by_name(recode[0].gsub(/\([^()]*\)/,'').strip),
+        tournament_player: tournament_player,
         match_predefined_team: match.predefined_team_by_name(team_name),
         inning: INNINGS[inning_no]
       }
     end
 
-    def save_performance(player_match_inning, inning_performance)
+    def save_performance(player_match_inning, inning_performance, fielding_performance = false)
       player_performance = MatchPlayerPerformance.find_by(player_match_inning)
+      return update_fielding_performance(player_performance, player_match_inning, inning_performance) if fielding_performance && player_performance.present?
       return player_performance.update(inning_performance) if player_performance.present?
       MatchPlayerPerformance.create(player_match_inning.merge(inning_performance))
     end
+
+    def update_fielding_performance(player_performance, player_match_inning, inning_performance)
+      player_performance.update(inning_performance.keys[0] => player_performance.send(inning_performance.keys[0]).next)
+    end
+
 end

@@ -179,6 +179,10 @@ permit_params :cricbuzz_match_url, :tournament_id, :playing_date,
     link_to 'Disapprove Match', disapprove_match_admin_match_path if resource.approved?
   end
 
+  action_item :calculate_points, only: [:show, :edit] do
+    link_to 'Calculate Points', calculate_points_admin_match_path if resource.approved?
+  end
+
   member_action :import_player_performances do
     if resource.cricbuzz_match_url.present?
       PlayerPerformanceScraperJob.perform_later(resource.id)
@@ -202,6 +206,11 @@ permit_params :cricbuzz_match_url, :tournament_id, :playing_date,
     else
       redirect_to admin_match_path, notice: resource.errors
     end
+  end
+
+  member_action :calculate_points do
+    CalculateMatchPointsJob.perform_later(resource.id)
+    redirect_to admin_match_path, notice: "Calculating team points..."
   end
 
 end

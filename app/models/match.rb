@@ -20,7 +20,7 @@ class Match < ApplicationRecord
 
   def predefined_team_by_name(name)
     match_predefined_teams.joins(predefined_tournament_team: :predefined_team)
-                            .where(predefined_teams: {team_name: name}).first
+                            .where(predefined_teams: {team_name: name}).take
   end
 
   def approve_match

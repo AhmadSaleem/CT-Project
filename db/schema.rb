@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170915114816) do
+ActiveRecord::Schema.define(version: 20170918075827) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 20170915114816) do
     t.integer "catches", default: 0
     t.integer "run_outs", default: 0
     t.integer "stumpings", default: 0
+    t.boolean "wicket_keeper", default: false
     t.index ["match_predefined_team_id"], name: "index_match_player_performances_on_match_predefined_team_id"
     t.index ["tournament_player_id"], name: "index_match_player_performances_on_tournament_player_id"
   end

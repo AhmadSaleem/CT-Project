@@ -81,19 +81,17 @@ class PlayerPerformanceScraper
     def create_fielding_performance(wicket_detail, inning_no, team_name)
       begin
         catcher_with_cb = wicket_detail.scan(/c [A-z]+\s*[A-z]* b/).first
+        wk_with_st_b = wicket_detail.scan(/st [A-z]+\s*[A-z]* b/).first
         if catcher_with_cb.present?
           player_name = catcher_with_cb.gsub(/c|b/,'').strip
-          player_match_inning = set_player_match_inning(player_name, inning_no, team_name)
-          save_performance(player_match_inning, {catches: 1}, true)
+          save_performance(set_player_match_inning(player_name, inning_no, team_name), {catches: 1}, true)
         elsif wicket_detail.include?("run out")
           wicket_detail.scan(/\([^()]*\)/).first.gsub(/[()]/, "").split('/').each do |player_name|
-            player_match_inning = set_player_match_inning(player_name, inning_no, team_name)
-            save_performance(player_match_inning, {run_outs: 1}, true)
+            save_performance(set_player_match_inning(player_name, inning_no, team_name), {run_outs: 1}, true)
           end
-        elsif wicket_detail.scan(/st [A-z]+\s*[A-z]* b/).first.present?
-          player_name = wicket_detail.scan(/st [A-z]+\s*[A-z]* b/).first.gsub(/st|b/,'').strip
-          player_match_inning = set_player_match_inning(player_name, inning_no, team_name)
-          save_performance(player_match_inning, {stumpings: 1}, true)
+        elsif wk_with_st_b.present?
+          player_name = wk_with_st_b.gsub(/st|b/,'').strip
+          save_performance(set_player_match_inning(player_name, inning_no, team_name), {stumpings: 1}, true)
         end
       rescue => e
         ExceptionMailer.exception_mail(e.message).deliver_later

@@ -13,7 +13,7 @@ class CalculateMatchPoints
   def call
     begin
       match.match_teams.each do |team|
-        points_earned = team.points_earned
+        points_earned = 0
         team.team_players.each do |player|
           player.enrolled_player.match_player_performances.each do |performance|
             @performance = performance

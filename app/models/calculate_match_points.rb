@@ -17,6 +17,7 @@ class CalculateMatchPoints
         team.team_players.each do |player|
           player.enrolled_player.match_player_performances.each do |performance|
             @performance = performance
+            points_earned += earned_points * 2 if player.captain?
             points_earned += earned_points
           end
         end

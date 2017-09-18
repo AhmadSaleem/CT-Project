@@ -18,6 +18,7 @@ class PlayerPerformanceScraper
 
   def create_performance
     begin
+      reset_fielding_performance
       doc = Nokogiri::HTML(open(match_url))
       inning_team_name(doc)
       doc.xpath(XPATH_OF_INNING).each_with_index do |inning, inning_no|
@@ -55,10 +56,11 @@ class PlayerPerformanceScraper
           break if record.include?("Extras")
 
           create_fielding_performance(record[1], inning_no, bowling_team(inning_no))
-          record.map! { |col| col.gsub(/\W/, ' ').strip if col.gsub(/\W/, ' ').strip.present? }.compact!
           player_match_inning = set_player_match_inning(record, inning_no, team_name)
+          wicket_keeper = wicket_keeper?(record[0])
+          record.map! { |col| col.gsub(/\W/, ' ').strip if col.gsub(/\W/, ' ').strip.present? }.compact!
           batting_performance = set_batting_performance(record)
-          save_performance(player_match_inning, batting_performance)
+          save_performance(player_match_inning, batting_performance.merge(wicket_keeper: wicket_keeper))
         rescue => e
           ExceptionMailer.exception_mail(e.message).deliver_later
         end
@@ -142,4 +144,11 @@ class PlayerPerformanceScraper
       player_performance.update(inning_performance.keys[0] => player_performance.send(inning_performance.keys[0]).next)
     end
 
+    def reset_fielding_performance
+      match.match_player_performances.update_all(catches: 0, run_outs: 0, stumpings: 0)
+    end
+
+    def wicket_keeper?(name)
+      name.include?("(wk)") || name.include?("& wk)")
+    end
 end

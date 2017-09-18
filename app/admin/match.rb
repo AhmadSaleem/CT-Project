@@ -6,7 +6,8 @@ permit_params :cricbuzz_match_url, :tournament_id, :playing_date,
                 match_predefined_teams_attributes: [:id, :predefined_tournament_team_id,
                 match_player_performances_attributes: [:id, :tournament_player_id, :runs,
                 :balls, :sixes, :fours, :strike_rate, :overs, :no_balls, :wide_balls, :economy,
-                :runs_conceded, :wickets, :maiden_overs, :inning, :_destroy]]
+                :runs_conceded, :wickets, :maiden_overs, :inning, :catches, :run_outs,
+                :stumpings, :wicket_keeper, :_destroy]]
 
   form  do |f|
     f.object.errors.keys
@@ -58,6 +59,10 @@ permit_params :cricbuzz_match_url, :tournament_id, :playing_date,
           player.input :wide_balls
           player.input :economy
           player.input :maiden_overs
+          player.input :catches
+          player.input :run_outs
+          player.input :stumpings
+          player.input :wicket_keeper
           player.input :_destroy, as: :boolean, label: "Remove Player"
         end
       id_index = id_index.next

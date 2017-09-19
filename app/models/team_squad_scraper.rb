@@ -1,12 +1,13 @@
 class TeamSquadScraper
   attr_reader :series_teams
   attr_reader :team_squads
-
+  attr_reader :player_roles
   BASE_URL = "http://www.cricbuzz.com"
 
   def initialize
     @series_teams = []
-    @team_squads  = {}
+    @team_squads  = []
+    @player_roles = []
   end
 
   def get_teams(url)
@@ -17,20 +18,37 @@ class TeamSquadScraper
     series_teams
   end
 
-  def get_squads(team)
-    type = ""
-    doc = Nokogiri::HTML(open(BASE_URL + "#{team[:squads_link]}"))
-    doc.xpath('//*[@class="cb-col cb-col-67 cb-nws-lft-col"]/*').each_with_index do |player, index|
-      if Player::ROLE_VALUES.key?(player.text)
-        type = player.text
-        next
+  def get_squads(url)
+    team_name = ""
+    doc = Nokogiri::HTML(open(url))
+    doc.xpath('//*[@class="list-group cb-list-group"]/*').each do |node|
+      if node.css(".cb-srs-sqd-sb-hdr").present?
+        team_name = node.text
+      else
+        node.xpath('div[@class="cb-col-67 cb-col"]/a').each do |player|
+          team_squads.push(team_name: team_name, profile_link: player['href'], player_name: player.text )
+        end
       end
-      array = []
-      player.xpath('div/div').each { |txt| array << txt.text }
-
-      next unless type.present?
-      team_squads.merge!(index => {team_name: team[:team_name], profile_link: player['href'], player_name: array[0], style: array[1], type: type })
     end
     team_squads
+  end
+
+  def get_player_role(players)
+    role = batting = bowling = nil
+    players.each do |player|
+      doc = Nokogiri::HTML(open(BASE_URL + "#{player[:profile_link]}"))
+      doc.xpath('//*[@class="cb-hm-rght"]/*').each do |attributes|
+        value = attributes.next_element.text.strip
+        role =  value if attributes.text == "Role"
+        batting = value if attributes.text == "Batting Style"
+
+        if attributes.text == "Bowling Style"
+          bowling = value
+          break
+        end
+      end
+      player_roles.push(team_name: player[:team_name], name: player[:player_name], role: role, batting_style: batting, bowling_style: bowling )
+    end
+    player_roles
   end
 end

@@ -11,7 +11,7 @@ class Player < ApplicationRecord
     all_rounder: 4,
   }
 
-  ROLE_VALUES = { "Batsmen" => 1, "Bowlers" =>  2, "Wicket-Keepers" => 3, "All-Rounders" => 4 }
+  ROLE_VALUES = { "Batsman" => 1, "Bowler" =>  2, "WK-Batsman" => 3, "Batting Allrounder" => 4, "Bowling Allrounder" => 4 }
 
   enum country: {
     india:        1,
@@ -29,7 +29,7 @@ class Player < ApplicationRecord
   }
 
   def self.add_players(players, predefined_tournament_teams)
-    players.each do |key, player|
+    players.each do |player|
       new_player = create_player(player)
       team = predefined_tournament_teams.map{ |team| team if team.team_name == player[:team_name] }.compact
       TournamentPlayer.where(player: new_player, predefined_tournament_team: team ).first_or_create!
@@ -37,15 +37,10 @@ class Player < ApplicationRecord
   end
 
   def self.create_player(player)
-    Player.where(name: player[:player_name]).first_or_create! do |attributes|
-      attributes.role = ROLE_VALUES[player[:type]]
-      attributes.batting_style = player[:type] == "Batsmen" ? player[:style] : 'None'
-      attributes.bowling_style = player[:type] == "Bowlers" ? player[:style] : 'None'
-      attributes.batting_style = player[:type] == "Wicket-Keepers" ? player[:style] : 'None'
-      if player[:type] == "All-Rounders"
-        attributes.batting_style = player[:style].split(",")[0]
-        player[:style].split(",")[1] == " " ? attributes.bowling_style = "None" : attributes.bowling_style = player[:style].split(",")[1]
-      end
+    Player.where(name: player[:name]).first_or_create! do |attributes|
+      attributes.role =  ROLE_VALUES[player[:role]]
+      attributes.batting_style = player[:batting_style]
+      attributes.bowling_style = player[:bowling_style]
     end
   end
 end

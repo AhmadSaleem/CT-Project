@@ -24,9 +24,11 @@ class Tournament < ApplicationRecord
   def fetch_team_and_squads
     begin
       scraper = TeamSquadScraper.new
-      teams = scraper.get_teams(self.cricbuzz_tournament_url)
+      teams = scraper.get_teams(cricbuzz_tournament_url)
       predefined_tournament_teams = PredefinedTeam.add_teams(teams, self.id)
-      teams.each{ |team| Player.add_players(scraper.get_squads(team), predefined_tournament_teams) }
+      squad = scraper.get_squads(cricbuzz_tournament_url)
+      players_with_roles = scraper.get_player_role(squad)
+      teams.each{ |team| Player.add_players(players_with_roles, predefined_tournament_teams) }
     rescue => e
       ExceptionMailer.exception_mail(e.message).deliver_later
     end

@@ -1,5 +1,5 @@
 class TeamsController < ApplicationController
-  before_action :set_team, only: [:show, :edit, :update, :destroy]
+  before_action :set_team, only: [:show, :destroy]
   before_action :set_players, only: [:edit, :update]
   before_action :authenticate_user!, except: [:index]
   before_action :set_tournament, only: [:new]
@@ -10,7 +10,6 @@ class TeamsController < ApplicationController
   end
 
   def show
-    @team = Team.find(params[:id])
   end
 
   def new
@@ -58,7 +57,8 @@ class TeamsController < ApplicationController
     end
 
     def set_players
-      @players = @team.tournament_players.map {|tp| ["#{tp.player_name}(#{tp.budget_points})",tp.id]}
+      @team = Team.where(id: params[:id]).includes(tournament: { tournament_players: :player }).take
+      @players = @team.tournament_players.map {|tp| ["#{tp.player_name}(#{tp.budget_points}) (#{tp.player_role})",tp.id]}
     end
 
     def set_tournament

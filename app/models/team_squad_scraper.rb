@@ -47,7 +47,7 @@ class TeamSquadScraper
           break
         end
       end
-      player_roles.push(team_name: player[:team_name], name: player[:player_name], role: role, batting_style: batting, bowling_style: bowling )
+      player_roles.push(team_name: player[:team_name].gsub(/\([^()]*\)/,'').strip, name: player[:player_name], role: role, batting_style: batting, bowling_style: bowling )
     end
     player_roles
   end

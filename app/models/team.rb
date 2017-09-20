@@ -15,15 +15,16 @@ class Team < ApplicationRecord
   validates_associated :team_players
   validates :user, uniqueness: { scope: :tournament, message: "You can register only one team in a tournament" }
   validate :budget
-  validate :coins
+  validate :coins, on: :create
+  validate :team_balance, on: :update
+  validate :captain, on: :update
   validate :unique_players
-  validate :team_balance
 
   CAPTAIN_MODIFICATION_PENALTY = 2
 
   before_create :set_modifications_limit
-  before_update :update_captains
   before_update :update_modifications
+  before_update :update_captains
   after_create  :deduct_coins
 
   scope :by_user, ->(user) {where(user: user)}
@@ -66,7 +67,7 @@ class Team < ApplicationRecord
     end
 
     def update_captains
-      team_players.captain.update_all(captain: false)
+      team_players.captain.update_all(captain: false) if team_players.pluck(:captain).count(true) > 1
     end
 
     def update_modifications
@@ -77,6 +78,11 @@ class Team < ApplicationRecord
 
       updated_captain = team_players.map { |tp| tp.enrolled_player if tp.captain? && !(TeamPlayer.find(tp.id).captain?)}.compact
       self.modifications_remaining = modifications_remaining - CAPTAIN_MODIFICATION_PENALTY if last_match_team.captain != updated_captain
+    end
+
+    def captain
+      return if team_players.pluck(:captain).any?
+      errors.add(:base, "Please choose captain")
     end
 
     def deduct_coins

@@ -34,20 +34,17 @@ class TeamSquadScraper
   end
 
   def get_player_role(players)
-    role = batting = bowling = nil
     players.each do |player|
+      role = batting = bowling = nil
       doc = Nokogiri::HTML(open(BASE_URL + "#{player[:profile_link]}"))
       doc.xpath('//*[@class="cb-hm-rght"]/*').each do |attributes|
         value = attributes.next_element.text.strip
         role =  value if attributes.text == "Role"
         batting = value if attributes.text == "Batting Style"
-
-        if attributes.text == "Bowling Style"
-          bowling = value
-          break
-        end
+        bowling = value if attributes.text == "Bowling Style"
+        break if attributes.text == "ICC Rankings"
       end
-      player_roles.push(team_name: player[:team_name].gsub(/\([^()]*\)/,'').strip, name: player[:player_name], role: role, batting_style: batting, bowling_style: bowling )
+      player_roles.push(team_name: player[:team_name], name: player[:player_name].gsub(/\([^()]*\)/,'').strip, role: role, batting_style: batting, bowling_style: bowling )
     end
     player_roles
   end

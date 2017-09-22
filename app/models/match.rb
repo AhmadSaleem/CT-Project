@@ -31,6 +31,10 @@ class Match < ApplicationRecord
     update(approved: false)
   end
 
+  def match_team_name
+    match_predefined_teams[0].team_name + " vs " + match_predefined_teams[1].team_name
+  end
+
   private
     def match_date_cannot_be_in_the_past
       if playing_date.present? && playing_date < Date.today

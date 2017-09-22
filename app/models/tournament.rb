@@ -41,4 +41,16 @@ class Tournament < ApplicationRecord
   def unpublish_tournament
     update(published: false)
   end
+
+  def standings
+    teams_standing = []
+    teams.each_with_index do |team, index|
+      sum = 0
+      team.match_teams.each do |match_team|
+        sum += match_team.points_earned
+      end
+      teams_standing.push(team_name: team.team_name, total: sum)
+    end
+    teams_standing.sort_by{|key, value| value}
+  end
 end

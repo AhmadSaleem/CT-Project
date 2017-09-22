@@ -43,6 +43,26 @@ class Tournament < ApplicationRecord
     update(published: false)
   end
 
+  def award_coins
+    return message = "Already awarded" if coins_awarded?
+    @tournament_coins = tournament_coins
+    return messgae = "Please first add tournament coins" unless @tournament_coins.present?
+    @teams =  standings
+    return message = "No teams to award coins" if @teams.empty?
+    @teams.each_with_index do |team, standing|
+      @tournament_coins.each do |tournament_coin|
+        if (tournament_coin.start_standing - 1..tournament_coin.end_standing - 1).include?(standing)
+          @user = Team.find_by(team_name: team[:team_name]).user
+          updated_coins = @user.available_coins + tournament_coin.coins
+          @user.update(available_coins: updated_coins)
+          break
+        end
+      end
+    end
+    update(coins_awarded: true)
+    message = "Successfully awarded coins"
+  end
+
   def standings
     teams_standing = []
     teams.each_with_index do |team, index|

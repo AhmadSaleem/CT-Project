@@ -2,7 +2,7 @@ class Player < ApplicationRecord
   has_many :tournament_players, dependent: :destroy
   has_many :predefined_tournament_teams, through: :tournament_players
 
-  validates :name, :role, :batting_style, :bowling_style, presence: true
+  validates :name, presence: true
 
   enum role: {
     batsman: 1,

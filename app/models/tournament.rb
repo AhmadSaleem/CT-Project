@@ -6,6 +6,7 @@ class Tournament < ApplicationRecord
   has_many :tournament_players, through: :predefined_tournament_teams
   has_many :players, through: :tournament_players
   has_many :matches, dependent: :destroy
+  has_many :tournament_coins, dependent: :destroy
 
   accepts_nested_attributes_for :predefined_tournament_teams, reject_if: :all_blank, allow_destroy: true
 

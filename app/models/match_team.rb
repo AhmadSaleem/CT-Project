@@ -15,7 +15,7 @@ class MatchTeam < ApplicationRecord
 
   private
     def set_captain
-      self.captain = team_players.captain.take.enrolled_player
+      self.captain = team_players.captain.take.enrolled_player if team_players.present?
     end
 
     def set_remaining_modifications

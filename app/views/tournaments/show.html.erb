@@ -15,7 +15,7 @@
                   <th>Points Earned</th>
                 </thead>
                 <tbody>
-                  <% match.match_teams.order("points_earned DESC").each do |match_team| %>
+                  <% match.match_teams.order_desc.each do |match_team| %>
                     <tr>
                       <td><%= match_team.team_name %></td>
                       <td><%= match_team.points_earned %><td>

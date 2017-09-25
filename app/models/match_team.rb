@@ -10,6 +10,8 @@ class MatchTeam < ApplicationRecord
 
   delegate :team_players, :team_name, to: :team
 
+  scope :order_desc, -> { order("points_earned DESC")}
+
   before_validation :set_captain, :set_remaining_modifications, on: :create
   after_create :add_match_team_players
 

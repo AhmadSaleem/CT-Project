@@ -32,7 +32,7 @@ class Match < ApplicationRecord
   end
 
   def match_team_name
-    match_predefined_teams[0].team_name + " vs " + match_predefined_teams[1].team_name
+    [match_predefined_teams.first.team_name, match_predefined_teams.last.team_name].join(" VS ")
   end
 
   private

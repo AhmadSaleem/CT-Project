@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170918075827) do
+ActiveRecord::Schema.define(version: 20170922045547) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -115,10 +115,10 @@ ActiveRecord::Schema.define(version: 20170918075827) do
 
   create_table "players", force: :cascade do |t|
     t.string "name", null: false
-    t.integer "role", null: false
-    t.integer "country"
-    t.string "batting_style", null: false
-    t.string "bowling_style", null: false
+    t.integer "role"
+    t.string "country"
+    t.string "batting_style"
+    t.string "bowling_style"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -161,7 +161,7 @@ ActiveRecord::Schema.define(version: 20170918075827) do
     t.bigint "tournament_player_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "captain"
+    t.boolean "captain", default: false
     t.index ["team_id"], name: "index_team_players_on_team_id"
     t.index ["tournament_player_id"], name: "index_team_players_on_tournament_player_id"
   end
@@ -175,6 +175,16 @@ ActiveRecord::Schema.define(version: 20170918075827) do
     t.datetime "updated_at", null: false
     t.index ["tournament_id"], name: "index_teams_on_tournament_id"
     t.index ["user_id"], name: "index_teams_on_user_id"
+  end
+
+  create_table "tournament_coins", force: :cascade do |t|
+    t.bigint "tournament_id"
+    t.integer "coins", null: false
+    t.integer "start_standing", null: false
+    t.integer "end_standing", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tournament_id"], name: "index_tournament_coins_on_tournament_id"
   end
 
   create_table "tournament_players", force: :cascade do |t|
@@ -197,6 +207,7 @@ ActiveRecord::Schema.define(version: 20170918075827) do
     t.datetime "updated_at", null: false
     t.string "cricbuzz_tournament_url"
     t.boolean "published", default: false
+    t.boolean "coins_awarded", default: false
   end
 
   create_table "users", force: :cascade do |t|

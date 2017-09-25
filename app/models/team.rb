@@ -15,15 +15,16 @@ class Team < ApplicationRecord
   validates_associated :team_players
   validates :user, uniqueness: { scope: :tournament, message: "You can register only one team in a tournament" }
   validate :budget
-  validate :coins
+  validate :coins, on: :create
+  validate :team_balance, on: :update
+  validate :captain, on: :update
   validate :unique_players
-  validate :team_balance
 
   CAPTAIN_MODIFICATION_PENALTY = 2
 
   before_create :set_modifications_limit
-  before_update :update_captains
   before_update :update_modifications
+  before_update :update_captains
   after_create  :deduct_coins
 
   scope :by_user, ->(user) {where(user: user)}
@@ -32,41 +33,14 @@ class Team < ApplicationRecord
 
   private
 
-    def team_balance
-      roles = player_roles
-      errors.add(:Team," must contain at least 3 bowlers") if roles.count("bowler") < 3
-      errors.add(:Team," must contain at least 3 batsmen") if roles.count("batsman") < 3
-      errors.add(:Team," must contain at least 1 wicket keeper") if roles.count("wk") < 1
-    end
 
-    def player_roles
-      team_players.flat_map(&:enrolled_player).flat_map(&:player).pluck(:role)
-    end
-
+    #Callbacks
     def set_modifications_limit
       self.modifications_remaining = modifications_limit
     end
 
-    def unique_players
-      if team_players.pluck(:team_id, :tournament_player_id).uniq!
-        errors.add(:torunament_player_id, ": Can not add duplicate players")
-      end
-    end
-
-    def budget
-      if tournament_budget < team_players.collect(&:enrolled_player).collect(&:budget_points).sum
-        errors.add(:id,"Please choose players within the budget allowed ")
-      end
-    end
-
-    def coins
-      if user_available_coins < coins_required
-        errors.add(:base, "You don't have enough coins")
-      end
-    end
-
     def update_captains
-      team_players.captain.update_all(captain: false)
+      team_players.captain.update_all(captain: false) if team_players.pluck(:captain).count(true) > 1
     end
 
     def update_modifications
@@ -82,5 +56,41 @@ class Team < ApplicationRecord
     def deduct_coins
       coins = user_available_coins - coins_required
       user.update(available_coins: coins)
+    end
+
+
+     # Custom Validations
+    def budget
+      if tournament_budget < team_players.collect(&:enrolled_player).collect(&:budget_points).sum
+        errors.add(:id,"Please choose players within the budget allowed ")
+      end
+    end
+
+    def coins
+      if user_available_coins < coins_required
+        errors.add(:base, "You don't have enough coins")
+      end
+    end
+
+    def team_balance
+      roles = player_roles
+      errors.add(:Team," must contain at least 3 bowlers") if roles.count("bowler") < 3
+      errors.add(:Team," must contain at least 3 batsmen") if roles.count("batsman") < 3
+      errors.add(:Team," must contain at least 1 wicket keeper") if roles.count("wk") < 1
+    end
+
+    def captain
+      return if team_players.pluck(:captain).any?
+      errors.add(:base, "Please choose captain")
+    end
+
+    def unique_players
+      if team_players.pluck(:team_id, :tournament_player_id).uniq!
+        errors.add(:torunament_player_id, ": Can not add duplicate players")
+      end
+    end
+
+    def player_roles
+      team_players.flat_map(&:enrolled_player).flat_map(&:player).pluck(:role)
     end
 end

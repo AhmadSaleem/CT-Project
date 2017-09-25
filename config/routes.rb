@@ -6,7 +6,10 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
   root to: 'tournaments#index'
 
-  resources :tournaments, only: [:index]
+  resources :tournaments, only: [:index, :show] do
+    get 'standings', on: :member
+  end
+
   resources :teams
   resources :users, only: [:edit, :update]
 

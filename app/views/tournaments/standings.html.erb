@@ -1,0 +1,30 @@
+<h2>Standings</h2>
+<div class="row">
+  <div class="col-md-5">
+    <div class="card">
+      <div class="header">
+        <h4 class="title"><%= @tournament.title %></h4>
+      </div>
+      <div class="content table-responsive table-full-width">
+        <table class="table table-hover table-striped">
+          <% if @tournament.standings.present? %>
+            <thead>
+              <th>Team Name</th>
+              <th>Points Earned</th>
+            </thead>
+            <tbody>
+              <%  @tournament.standings.each do |team| %>
+                <tr>
+                  <td><%= team[:team_name] %></td>
+                  <td><%= team[:total] %><td>
+                </tr>
+              <% end %>
+            </tbody>
+          <% else %>
+            <p>Tounrament does nto have any team<p>
+          <% end %>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

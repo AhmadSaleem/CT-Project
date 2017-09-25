@@ -8,7 +8,7 @@ class MatchTeam < ApplicationRecord
 
   validates :match, :team, :captain, presence: true
 
-  delegate :team_players, to: :team
+  delegate :team_players, :team_name, to: :team
 
   before_validation :set_captain, :set_remaining_modifications, on: :create
   after_create :add_match_team_players

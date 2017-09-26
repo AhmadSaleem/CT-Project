@@ -44,34 +44,17 @@ class Tournament < ApplicationRecord
   end
 
   def award_coins
-    return message = "Already awarded" if coins_awarded?
-    @tournament_coins = tournament_coins
-    return messgae = "Please first add tournament coins" unless @tournament_coins.present?
-    @teams =  standings
-    return message = "No teams to award coins" if @teams.empty?
-    @teams.each_with_index do |team, standing|
-      @tournament_coins.each do |tournament_coin|
-        if (tournament_coin.start_standing - 1..tournament_coin.end_standing - 1).include?(standing)
-          @user = Team.find_by(team_name: team[:team_name]).user
-          updated_coins = @user.available_coins + tournament_coin.coins
-          @user.update(available_coins: updated_coins)
-          break
+    return unless tournament_coins.present? && teams.present? && !coins_awarded
+    ActiveRecord::Base.transaction do
+      teams.ordered_by_points.each_with_index do |team, standing|
+        tournament_coins.each do |tournament_coin|
+          if (tournament_coin.start_standing..tournament_coin.end_standing).include?(standing + 1)
+            team.user.update(available_coins: (team.user.available_coins.to_i + tournament_coin.coins.to_i))
+            break
+          end
         end
       end
+      update(coins_awarded: true)
     end
-    update(coins_awarded: true)
-    message = "Successfully awarded coins"
-  end
-
-  def standings
-    teams_standing = []
-    teams.each_with_index do |team, index|
-      sum = 0
-      team.match_teams.each do |match_team|
-        sum += match_team.points_earned
-      end
-      teams_standing.push(team_name: team.team_name, total: sum)
-    end
-    teams_standing.sort_by{|key, value| value}
   end
 end

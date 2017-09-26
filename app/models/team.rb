@@ -28,6 +28,7 @@ class Team < ApplicationRecord
   after_create  :deduct_coins
 
   scope :by_user, ->(user) {where(user: user)}
+  scope :ordered_by_points, -> {order("points_earned DESC")}
 
   accepts_nested_attributes_for :team_players, reject_if: :all_blank, allow_destroy: true
 

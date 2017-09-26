@@ -97,8 +97,7 @@ ActiveAdmin.register Tournament do
   end
 
   member_action :award_coins do
-    message = resource.award_coins
-    redirect_to admin_tournaments_path, notice: message
+    AwardCoinsJob.perform_later(resource.id)
+    redirect_to admin_tournaments_path, notice: "Award coins job enqueued."
   end
-
 end

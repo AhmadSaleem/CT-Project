@@ -22,6 +22,7 @@ class CalculateMatchPoints
         end
         match_team.update(points_earned: points_earned)
       end
+      UserMailer.calculate_points.deliver_later
     rescue => e
       ExceptionMailer.exception_mail(e.message).deliver_later
     end

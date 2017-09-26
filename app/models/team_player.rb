@@ -3,8 +3,9 @@ class TeamPlayer < ApplicationRecord
   belongs_to :team
 
   validates :enrolled_player, uniqueness: { scope: :team, message: "Can not add duplicate players" }
+  validates :enrolled_player, :team, presence: true
 
-  delegate :player_name, :budget_points, to: :enrolled_player
+  delegate :player_name, :budget_points, :match_player_performances, to: :enrolled_player
 
   scope :captain, -> { where(captain: true) }
 

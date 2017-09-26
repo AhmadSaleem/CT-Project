@@ -9,5 +9,4 @@ class MatchPredefinedTeam < ApplicationRecord
 
   validates :predefined_tournament_team, presence: { message: "must exist" }, uniqueness: { scope: :match, message: 'teams should be diferent' }
   accepts_nested_attributes_for :match_player_performances, reject_if: :all_blank, allow_destroy: true
-
 end

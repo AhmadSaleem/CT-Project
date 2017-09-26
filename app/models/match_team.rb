@@ -14,6 +14,7 @@ class MatchTeam < ApplicationRecord
 
   before_validation :set_captain, :set_remaining_modifications, on: :create
   after_create :add_match_team_players
+  after_update :update_team_points
 
   private
     def set_captain
@@ -28,5 +29,11 @@ class MatchTeam < ApplicationRecord
       team_players.each do |players|
         self.match_team_players.create(tournament_player_id: players.tournament_player_id)
       end
+    end
+
+    def update_team_points
+      old_poitns = team.points_earned
+      old_poitns += points_earned - points_earned_was
+      team.update(points_earned: old_poitns)
     end
 end

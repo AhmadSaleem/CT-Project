@@ -12,13 +12,12 @@ class CalculateMatchPoints
     begin
       match.match_teams.each do |match_team|
         points_earned = 0
-        fielding_dismissals_count = 0
         match_team.team_players.each do |player|
           player.match_player_performances.each do |performance|
             next unless performance.match == match
             @performance = performance
             points_earned += earned_points
-            points_earned += points_earned if player.captain?
+            points_earned += earned_points if player.captain?
           end
         end
         match_team.update(points_earned: points_earned)

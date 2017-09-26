@@ -29,7 +29,7 @@ class Tournament < ApplicationRecord
       predefined_tournament_teams = PredefinedTeam.add_teams(teams, self.id)
       squad = scraper.get_squads(cricbuzz_tournament_url)
       players_with_roles = scraper.get_player_role(squad)
-      teams.each{ |team| Player.add_players(players_with_roles, predefined_tournament_teams) }
+      Player.add_players(players_with_roles, predefined_tournament_teams)
     rescue => e
       ExceptionMailer.exception_mail(e.message).deliver_later
     end

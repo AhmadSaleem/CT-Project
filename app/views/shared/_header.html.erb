@@ -22,7 +22,9 @@
       <ul class="nav navbar-nav navbar-right">
         <% if user_signed_in? %>
           <li class="nav-item">
-            <a class="nav-link">Coins: <%= current_user.available_coins %></a>
+            <a class="nav-link">
+              <%= image_tag "coin.png", size: "24x24" %>  <%= current_user.available_coins %>
+            </a>
           </li>
           <li class="nav-item">
             <a class="nav-link"><%= current_user.email %></a>

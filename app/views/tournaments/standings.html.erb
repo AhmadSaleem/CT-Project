@@ -12,12 +12,14 @@
             <thead>
               <th>Team Name</th>
               <th>Points Earned</th>
+              <th>Modifications Remaining</th>
             </thead>
             <tbody>
               <% @tournament.teams.ordered_by_points.each do |team| %>
                 <tr>
                   <td><%= team.team_name %></td>
-                  <td><%= team.points_earned %><td>
+                  <td><%= team.points_earned %></td>
+                  <td><%= team.modifications_remaining %></td>
                 </tr>
               <% end %>
             </tbody>

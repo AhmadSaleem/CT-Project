@@ -1,0 +1,49 @@
+<div class="row">
+  <div class="col-md-8">
+    <p class="title"> Welcome to Cricket Fantasy</p>
+  </div>
+
+  <% unless user_signed_in? %>
+    <div class="col-md-3 register">
+      <%= link_to new_user_session_path, class: "btn btn-danger btnn" do %>
+        <p>Register to play <i class="pe-7s-next pe-3x pe-va"></i></p>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<div class="row start-div">
+  <div class="col-md-7 inner-image">
+    <%= image_tag "watson.png" %>
+  </div>
+
+  <div class="col-md-4 inner-image"">
+    <%= image_tag "img18.png" %>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <p class="text">Play fantasy cricket and win prizez daily</p>
+    <p class="text"> 3 Easy steps </p>
+    <div class="col-md-3">
+      <%= image_tag "series.jpg", class: "image" %>
+      <span class="steps"><p class="number">1</p>Choose series</span>
+    </div>
+
+    <div class="col-md-3">
+      <%= image_tag "teams.jpg", class: "image" %>
+      <span class="steps"><p class="number">2</p>Create your fantasy team</span>
+    </div>
+
+    <div class="col-md-3">
+      <%= image_tag "players.jpg", class: "image" %>
+      <span class="steps"><p class="number">3</p>Add players in your team</span>
+    </div>
+
+    <div class="col-md-3">
+      <%= image_tag "score.png" %>
+      <span class="steps">Score points based on real matches </span>
+    </div>
+  </div>
+</div>

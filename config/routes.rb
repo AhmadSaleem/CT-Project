@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: { omniauth_callbacks: "users/callbacks", registrations: "users/registrations" }
   ActiveAdmin.routes(self)
-  root to: 'tournaments#index'
+  root to: 'home#index'
 
   resources :tournaments, only: [:index, :show] do
     get 'standings', on: :member

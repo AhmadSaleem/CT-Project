@@ -1,0 +1,59 @@
+.title {
+  font-size: 400%;
+  font-style: oblique;
+  font-weight: bolder;
+  margin-left: -32px;
+  color: crimson;
+}
+
+.register {
+   margin-top: 2%;
+}
+
+.btnn {
+  font-weight: bolder;
+  font-style: oblique;
+  font-size: 19px;
+  width: 100%;
+
+}
+
+.start-div {
+  background-image: url(back.jpg);
+  margin-left: -30px;
+  margin-right: -73px;
+}
+
+.inner-image {
+  margin-top:  6%;
+  margin-left: 4%;
+}
+
+.steps {
+  display: inherit;
+  font-size: 150%! important;
+  margin-top: 4%;
+  float: left;
+  width: 80%;
+}
+
+.image {
+  border-radius: 48%;
+  border: 3px solid lightgray;
+  width: 165px;
+  height: 160px;
+}
+
+.number {
+    color: #c61d23;
+    float: left;
+    font-size: 200%;
+    line-height: 85%;
+    margin: 0 6% 0 0;
+}
+
+.text {
+  font-size: 250%;
+  text-align: center;
+  margin-top: 2%;
+}

@@ -9,5 +9,5 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable, omniauth_providers: SITES
-
+  validates :user_name, :email, :password, :password_confirmation, :available_coins, presence: true
 end

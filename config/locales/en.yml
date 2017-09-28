@@ -31,3 +31,7 @@
 
 en:
   hello: "Hello world"
+  active_admin:
+    resources:
+      user:
+        new_model: 'Create New Admin'

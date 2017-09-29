@@ -12,7 +12,7 @@
         <td><%= tournament_player.player_role %></td>
         <td>
           <%= link_to "View", admin_player_path(tournament_player.player_id) %>|
-          <%= link_to "Edit", edit_admin_player_path(tournament_player.player_id) %>
+          <%= link_to "Edit", edit_admin_tournament_player_path(tournament_player) %>
         </td>
       </tr>
     <% end %>

@@ -25,7 +25,9 @@
                     <td><%= tournament.modifications_limit %></td>
                     <td><%= tournament.coins_required %></td>
                     <td><%= tournament.budget %></td>
-                    <td><%= link_to 'Enroll', { controller: :teams, action: :new, tournament_id: tournament.id } %></td>
+                    <td><%= link_to "Team Points", tournament_path(tournament) %>  |
+                      <%= link_to "Enroll", { controller: :teams, action: :new, tournament_id: tournament.id } %>
+                    </td>
                   </tr>
                 <% end %>
                 <hr>

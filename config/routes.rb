@@ -1,12 +1,18 @@
 Rails.application.routes.draw do
+
   require 'sidekiq/web'
 
   devise_for :users, controllers: { omniauth_callbacks: "users/callbacks", registrations: "users/registrations" }
-  devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
-  root to: 'tournaments#index'
+  root to: 'home#index'
 
-  resources :tournaments, only: [:index]
+  resources :tournaments, only: [:index, :show] do
+    collection do
+      get 'team_standings'
+      get 'standings'
+    end
+  end
+
   resources :teams
   resources :users, only: [:edit, :update]
 

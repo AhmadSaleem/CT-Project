@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170918075827) do
+ActiveRecord::Schema.define(version: 20170927061631) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,23 +27,6 @@ ActiveRecord::Schema.define(version: 20170918075827) do
     t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
     t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
-  end
-
-  create_table "admin_users", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string "current_sign_in_ip"
-    t.string "last_sign_in_ip"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_admin_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
   create_table "match_player_performances", force: :cascade do |t|
@@ -115,10 +98,10 @@ ActiveRecord::Schema.define(version: 20170918075827) do
 
   create_table "players", force: :cascade do |t|
     t.string "name", null: false
-    t.integer "role", null: false
-    t.integer "country"
-    t.string "batting_style", null: false
-    t.string "bowling_style", null: false
+    t.integer "role"
+    t.string "country"
+    t.string "batting_style"
+    t.string "bowling_style"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -161,7 +144,7 @@ ActiveRecord::Schema.define(version: 20170918075827) do
     t.bigint "tournament_player_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "captain"
+    t.boolean "captain", default: false
     t.index ["team_id"], name: "index_team_players_on_team_id"
     t.index ["tournament_player_id"], name: "index_team_players_on_tournament_player_id"
   end
@@ -173,8 +156,19 @@ ActiveRecord::Schema.define(version: 20170918075827) do
     t.string "team_name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "points_earned", default: 0
     t.index ["tournament_id"], name: "index_teams_on_tournament_id"
     t.index ["user_id"], name: "index_teams_on_user_id"
+  end
+
+  create_table "tournament_coins", force: :cascade do |t|
+    t.bigint "tournament_id"
+    t.integer "coins", null: false
+    t.integer "start_standing", null: false
+    t.integer "end_standing", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tournament_id"], name: "index_tournament_coins_on_tournament_id"
   end
 
   create_table "tournament_players", force: :cascade do |t|
@@ -197,6 +191,7 @@ ActiveRecord::Schema.define(version: 20170918075827) do
     t.datetime "updated_at", null: false
     t.string "cricbuzz_tournament_url"
     t.boolean "published", default: false
+    t.boolean "coins_awarded", default: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -214,10 +209,29 @@ ActiveRecord::Schema.define(version: 20170918075827) do
     t.datetime "updated_at", null: false
     t.integer "available_coins", default: 1000, null: false
     t.string "user_name"
+    t.boolean "admin", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "match_player_performances", "match_predefined_teams", on_delete: :cascade
+  add_foreign_key "match_player_performances", "tournament_players", on_delete: :cascade
+  add_foreign_key "match_predefined_teams", "matches", on_delete: :cascade
+  add_foreign_key "match_predefined_teams", "predefined_tournament_teams", on_delete: :cascade
   add_foreign_key "match_team_players", "match_teams", on_delete: :cascade
+  add_foreign_key "match_team_players", "tournament_players", on_delete: :cascade
+  add_foreign_key "match_teams", "matches", on_delete: :cascade
+  add_foreign_key "match_teams", "teams", on_delete: :cascade
   add_foreign_key "match_teams", "tournament_players", column: "captain_id", on_delete: :cascade
+  add_foreign_key "matches", "tournaments", on_delete: :cascade
+  add_foreign_key "predefined_tournament_teams", "predefined_teams", on_delete: :cascade
+  add_foreign_key "predefined_tournament_teams", "tournaments", on_delete: :cascade
+  add_foreign_key "social_logins", "users", on_delete: :cascade
+  add_foreign_key "team_players", "teams", on_delete: :cascade
+  add_foreign_key "team_players", "tournament_players", on_delete: :cascade
+  add_foreign_key "teams", "tournaments", on_delete: :cascade
+  add_foreign_key "teams", "users", on_delete: :cascade
+  add_foreign_key "tournament_coins", "tournaments", on_delete: :cascade
+  add_foreign_key "tournament_players", "players", on_delete: :cascade
+  add_foreign_key "tournament_players", "predefined_tournament_teams", on_delete: :cascade
 end

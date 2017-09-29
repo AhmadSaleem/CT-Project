@@ -1,39 +1,38 @@
 class CalculateMatchPoints
   attr_reader :match
-  attr_reader :format
   attr_reader :performance
   attr_reader :points_summary
 
   def initialize(match)
     @match = match
-    @format = match.tournament.format
-    @points_summary = PointsSummary.send(format)
+    @points_summary = PointsSummary.send(match.format)
   end
 
   def call
     begin
-      match.match_teams.each do |team|
+      match.match_teams.each do |match_team|
         points_earned = 0
-        team.team_players.each do |player|
-          player.enrolled_player.match_player_performances.each do |performance|
+        match_team.team_players.each do |player|
+          player.match_player_performances.each do |performance|
+            next unless performance.match == match
             @performance = performance
-            points_earned += earned_points * 2 if player.captain?
             points_earned += earned_points
+            points_earned += earned_points if player.captain?
           end
         end
-        team.update(points_earned: points_earned)
+        match_team.update(points_earned: points_earned)
       end
+      UserMailer.calculate_points.deliver_later
     rescue => e
       ExceptionMailer.exception_mail(e.message).deliver_later
     end
-
   end
 
   private
 
     def earned_points
       begin
-        points = batting_points + bowling_points + bonus_points
+        points = batting_points + bowling_points + bonus_points + wk_points
       rescue => e
          ExceptionMailer.exception_mail(e.message).deliver_later
       end
@@ -58,6 +57,36 @@ class CalculateMatchPoints
       points += performance_points("run_outs") * summary_points("run_out")
       points += performance_points("stumpings") * summary_points("stumping")
       points += performance_points("catches") * summary_points("catch_out")
+      points += fielding_points(fielding_dismissals)
+    end
+
+    def wk_points
+      return 0 unless performance.wicket_keeper?
+      wk_dismissals = performance_points("catches") + performance_points("stumpings") + performance_points("run_outs")
+      case wk_dismissals
+        when 3
+          points = summary_points("wk_dismissals_3")
+        when 4..10
+          points = points_summary("wk_dismissals_4_or_more")
+        else
+          return 0
+      end
+    end
+
+    def fielding_dismissals
+      return 0 if performance.wicket_keeper?
+      performance_points("catches") + performance_points("run_outs")
+    end
+
+    def fielding_points(dismissals)
+      case dismissals
+        when 3
+          points = summary_points("fielding_dismissals_3")
+        when 4..10
+          points = summary_points("fielding_dismissals_4plus")
+        else
+          return 0
+      end
     end
 
     def strike_rate_points(strike_rate)
@@ -149,12 +178,12 @@ class CalculateMatchPoints
     end
 
     def batting_qualify?
-      (format == 'T20' && performance_points("balls") >= 20 || performance_points("runs") >= 20) ||
-      (format == 'ODI' && performance_points("balls") >= 25 || performance_points("runs") >= 25)
+      (match.format == 'T20' && performance_points("balls") >= 20 || performance_points("runs") >= 20) ||
+      (match.format == 'ODI' && performance_points("balls") >= 25 || performance_points("runs") >= 25)
     end
 
     def bowling_qualify?
-      (format == 'T20' && performance_points("overs") >= 2) || (format == 'ODI' && performance_points("overs") >= 3)
+      (match.format == 'T20' && performance_points("overs") >= 2) || (match.format == 'ODI' && performance_points("overs") >= 3)
     end
 
     def summary_points(scoring_area)

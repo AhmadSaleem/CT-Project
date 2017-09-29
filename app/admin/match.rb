@@ -12,7 +12,9 @@ permit_params :cricbuzz_match_url, :tournament_id, :playing_date,
   form  do |f|
     f.object.errors.keys
     f.inputs :tournament
-    f.inputs :playing_date
+    f.inputs do
+      f.input :playing_date, as: :date_picker
+    end
     f.inputs :cricbuzz_match_url
     f.inputs "Select teams" do
       (2 - f.object.match_predefined_teams.size).times do

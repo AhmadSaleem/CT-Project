@@ -18,6 +18,12 @@ ActiveAdmin.register Tournament do
     end
   end
 
+  action_item :award_coins, only: [:show, :edit] do
+    if resource.published? && !resource.coins_awarded?
+      link_to 'Award Coins', award_coins_admin_tournament_path
+    end
+  end
+
 
   permit_params :cricbuzz_tournament_url, :title, :format, :modifications_limit, :coins_required, :budget,
   predefined_tournament_teams_attributes: [ :id, :predefined_team_id, :_destroy,
@@ -88,5 +94,10 @@ ActiveAdmin.register Tournament do
   member_action :unpublish_tournament do
     resource.unpublish_tournament
     redirect_to admin_tournaments_path, notice: "Successfully Unpublished..."
+  end
+
+  member_action :award_coins do
+    AwardCoinsJob.perform_later(resource.id)
+    redirect_to admin_tournaments_path, notice: "Award coins job enqueued."
   end
 end

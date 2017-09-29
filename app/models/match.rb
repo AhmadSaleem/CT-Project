@@ -18,6 +18,8 @@ class Match < ApplicationRecord
 
   after_create :add_match_teams
 
+  delegate :format, to: :tournament
+
   def predefined_team_by_name(name)
     match_predefined_teams.joins(predefined_tournament_team: :predefined_team)
                             .where(predefined_teams: {team_name: name}).take
@@ -29,6 +31,10 @@ class Match < ApplicationRecord
 
   def disapprove_match
     update(approved: false)
+  end
+
+  def match_team_name
+    [match_predefined_teams.first.team_name, match_predefined_teams.last.team_name].join(" VS ")
   end
 
   private

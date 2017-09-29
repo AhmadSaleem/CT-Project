@@ -1,0 +1,36 @@
+<h2><%= @tournament.title %></h2>
+<div class="row">
+  <% if @tournament.matches.present? %>
+    <% @tournament.matches.each do |match|%>
+      <div class="col-md-5">
+        <div class="card">
+          <div class="header">
+            <h4 class="title"><%= match.match_team_name %></h4>
+          </div>
+          <div class="content table-responsive table-full-width">
+            <table class="table table-hover table-striped">
+              <% if match.match_teams.present? %>
+                <thead>
+                  <th>Team Name</th>
+                  <th>Points Earned</th>
+                </thead>
+                <tbody>
+                  <% match.match_teams.order_desc.each do |match_team| %>
+                    <tr>
+                      <td><%= match_team.team_name %></td>
+                      <td><%= match_team.points_earned %><td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              <% else %>
+                <p>Tournament does not have any team</p>
+              <% end %>
+            </table>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <p>There are no matches in this tournament</p>
+  <% end %>
+</div>

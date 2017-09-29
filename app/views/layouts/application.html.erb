@@ -10,7 +10,7 @@
 
   <body>
     <div class="wrapper">
-      <% if signed_in? %>
+      <% if signed_in? && !current_page?(root_path) %>
         <%= render 'shared/sidebar' %>
         <div class="main-panel">
       <% end %>

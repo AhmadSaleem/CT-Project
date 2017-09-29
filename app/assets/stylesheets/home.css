@@ -1,21 +1,28 @@
-.title {
+#fantasy-title {
   font-size: 400%;
   font-style: oblique;
   font-weight: bolder;
-  margin-left: -32px;
+  margin-left: -13px;
   color: crimson;
+}
+
+.play-btn {
+  width: 100%;
+  text-align: center;
+  border-width: thin;
+  border-radius: 23px;
+  margin-bottom: 2%;
 }
 
 .register {
    margin-top: 2%;
 }
 
-.btnn {
+.play-btn-text {
   font-weight: bolder;
   font-style: oblique;
   font-size: 19px;
-  width: 100%;
-
+  color: brown;
 }
 
 .start-div {

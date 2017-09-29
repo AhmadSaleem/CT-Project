@@ -1,15 +1,18 @@
 <div class="row">
   <div class="col-md-8">
-    <p class="title"> Welcome to Cricket Fantasy</p>
+    <p id="fantasy-title"> Welcome to Cricket Fantasy</p>
   </div>
-
-  <% unless user_signed_in? %>
-    <div class="col-md-3 register">
-      <%= link_to new_user_session_path, class: "btn btn-danger btnn" do %>
-        <p>Register to play <i class="pe-7s-next pe-3x pe-va"></i></p>
+  <div class="col-md-3 register">
+    <% if user_signed_in? %>
+      <%= link_to tournaments_path, class: "btn play-btn" do %>
+        <p  class="play-btn-text">Click here to play</p>
       <% end %>
-    </div>
-  <% end %>
+    <% else %>
+     <%= link_to new_user_session_path, class: "btn play-btn" do %>
+        <p class="play-btn-text">Register</p>
+      <% end %>
+    <% end %>
+  </div>
 </div>
 
 <div class="row start-div">

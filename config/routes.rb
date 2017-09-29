@@ -7,7 +7,10 @@ Rails.application.routes.draw do
   root to: 'home#index'
 
   resources :tournaments, only: [:index, :show] do
-    get 'standings', on: :member
+    collection do
+      get 'team_standings'
+      get 'standings'
+    end
   end
 
   resources :teams

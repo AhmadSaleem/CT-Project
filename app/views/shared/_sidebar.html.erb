@@ -18,6 +18,12 @@
         <% end %>
       </li>
       <li>
+        <%= link_to standings_tournaments_path do %>
+          <i class="pe-7s-menu"></i>
+          <p>Standings</p>
+        <% end %>
+      </li>
+      <li>
         <%= link_to destroy_user_session_path, method: :delete do %>
           <i class="pe-7s-power"></i>
           <p>Log Out</p>
